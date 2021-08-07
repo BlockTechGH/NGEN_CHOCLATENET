@@ -1,0 +1,208 @@
+﻿@model NGEN_CRM.Models.Chat
+    <style>
+        span.stars, span.stars span {
+            display: block;
+            background-size: contain;
+            background: url( 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=' ) 0 -21px repeat-x;
+            width: 80px;
+            height: 24px;
+        }
+
+            span.stars span {
+                background-position: 0 0;
+            }
+    </style>
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Dashboard" method="post">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>CHAT SUMMARY</strong>
+                        </div>
+                        <div class="card-body card-block">
+                            <div class="row form-group">
+                                <div class="col col-md-1"><label for="select" class=" form-control-label">Date</label></div>
+                                <div class="col-12 col-md-2">
+                                    @Html.DropDownListFor(model => model.Duration, new List<SelectListItem>()
+                                               {
+                                                  new SelectListItem() { Text = "Please select", Value = ""} ,
+                                                  new SelectListItem() { Text = "Yesterday", Value = "1"} ,
+                                                  new SelectListItem() { Text = "Last7Days", Value = "2"},
+                                                  new SelectListItem() { Text = "Last15Days", Value = "3"},
+                                                  new SelectListItem() { Text = "Last30Days", Value = "4"},
+                                                  new SelectListItem() { Text = "CustomRange", Value = "5"},
+                                               }, new { @id = "ddlDuration", @class = "form-control", @required = true })
+                                </div>
+                                <div id="Div1" style="display:none" class="col col-md-8">
+                                    <div class="row form-group">
+                                        <div class="col col-md-2"><label for="hf-email" class=" form-control-label">From Date</label></div>
+                                        <div class="input-group col-md-4">
+                                            <input type="date" id="hf-password" value="@Model.FromDate" name="FromDate" placeholder="Select From Date..." class="form-control">
+                                        </div>
+
+                                        <div class="col col-md-2"><label for="hf-password" class=" form-control-label">To Date</label></div>
+                                        <div class="input-group col-md-4">
+                                            <input type="date" id="hf-password" value="@Model.ToDate" name="ToDate" placeholder="Select To Date..." class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Widgets  -->
+
+                        <div class="row" style="padding-left: 28px;padding-right: 28px">
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="card text-white bg-flat-color-1">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+
+                                                <span><strong>@ViewBag.TotalConv</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">Total Conversation</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-menu"></i>
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="card text-white " style="background-color:#e6445a">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+
+                                                <span><strong>@ViewBag.TotalMsg</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">Messages</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-comment"></i>
+
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                            <div class="col-sm-6 col-lg-4">
+                                <div class="card text-white bg-flat-color-2">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+                                                <span><strong>@ViewBag.TotalAvgT</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">Avg.ResponseTime</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-timer"></i>
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Widgets -->
+            <div class="clearfix"></div>
+            <!-- Agent Summary -->
+            <div class="orders">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>AGENT PERFORMANCE</strong>
+                            </div>
+                            <div class="card-body  card-block">
+                                <div class="table-stats order-table ov-h">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:320px">Agent Name</th>
+                                                <th style="width:200px">Conv.Inbound </th>
+                                                <th style="width:200px">Conv.Outbound </th>
+                                                <th style="width:200px">Messages </th>
+                                                <th style="width:200px">Avg Resp Time </th>
+                                                <th style="width:200px">Initial Resp Time </th>
+                                                <th style="width:200px">Sup.Rating</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.ChatList)
+                                            {
+                                            <tr>
+                                                <td>@Html.DisplayFor(modelItem => item.AgentName)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.InbConv)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.OutConv) </td>
+                                                <td> @Html.DisplayFor(modelItem => item.Messages)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.AvgRespTime)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.InitRespTime)</td>
+                                            
+                                                <td>
+                                                   
+                                                    <span class="stars"> @item.SuprRating</span>
+                                                </td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+                </div>
+            </div>
+            <!-- /.Agent Summary -->
+          
+
+        </form>
+    </div><!-- .animated -->
+</div><!-- .content -->
+<div class="clearfix"></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">$(function () {
+        $("#ddlDuration").change(function () {
+
+            if ($(this).val() == "5") {
+                $("#Div1").show();
+            } else {
+                $("#Div1").hide();
+            }
+        });
+    });</script>
+<script>
+    $.fn.stars = function () {
+        return $(this).each(function () {
+            // Get the value
+            var val = parseFloat($(this).html());
+            // Make sure that the value is in 0 - 5 range, multiply to get width
+            var size = Math.max(0, (Math.min(5, val))) * 20;
+            // Create stars holder
+            var $span = $('<span />').width(size);
+            // Replace the numerical value with stars
+            $(this).html($span);
+        });
+    }
+    $(document).ready(function () {
+        $(function () {
+            $('span.stars').stars();
+        });
+    });
+</script>
+<!--  Chart js -->
+

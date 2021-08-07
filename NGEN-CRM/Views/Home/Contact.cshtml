@@ -1,0 +1,356 @@
+﻿@model NGEN_CRM.Models.Home
+
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Create" method="post">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>CALL SUMMARY</strong>
+                        </div>
+                        <div class="card-body card-block">
+
+                            <div class="row form-group">
+                                <div class="col col-md-1"><label for="select" class=" form-control-label">Date</label></div>
+                                <div class="col-12 col-md-2">
+                                    @Html.DropDownListFor(model => model.Duration, new List<SelectListItem>()
+                                               {
+                                                  new SelectListItem() { Text = "Please select", Value = ""} ,
+                                                  new SelectListItem() { Text = "Yesterday", Value = "1"} ,
+                                                  new SelectListItem() { Text = "Last7Days", Value = "2"},
+                                                  new SelectListItem() { Text = "Last15Days", Value = "3"},
+                                                  new SelectListItem() { Text = "Last30Days", Value = "4"},
+                                                  new SelectListItem() { Text = "CustomRange", Value = "5"},
+                                               }, new { @id = "ddlDuration", @class = "form-control", @required = true })
+
+                                </div>
+                                <div id="Div1" style="display:none" class="col col-md-8">
+
+                                    <div class="row form-group">
+                                        <div class="col col-md-2"><label for="hf-email" class=" form-control-label">From Date</label></div>
+                                        <div class="input-group col-md-4">
+
+                                            <input type="date" id="hf-password" value="@Model.FromDate" name="FromDate" placeholder="Select From Date..." class="form-control">
+                                        </div>
+
+
+                                        <div class="col col-md-2"><label for="hf-password" class=" form-control-label">To Date</label></div>
+                                        <div class="input-group col-md-4">
+
+                                            <input type="date" id="hf-password" value="@Model.ToDate" name="ToDate" placeholder="Select To Date..." class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- Widgets  -->
+                        
+                        <div class="row" style="padding-left: 28px;padding-right: 28px">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="card text-white bg-flat-color-1">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+                                               
+                                                <span ><strong>@ViewBag.Inbound</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">INBOUND</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-bottom-arrow"></i>
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="card text-white " style="background-color:#e6445a">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+                                              
+                                                <span><strong>@ViewBag.Missed</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">MISSED</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-close-circle"></i> 
+                                           
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="card text-white bg-flat-color-2">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+                                                <span ><strong>@ViewBag.Outbound</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">OUTBOUND</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-up-arrow"></i>
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="card text-white bg-flat-color-3">
+                                    <div class="card-body">
+                                        <div class="card-left pt-1 float-left">
+                                            <h1 class="mb-0 fw-r">
+                                                <span ><strong>@ViewBag.Total</strong></span>
+                                            </h1>
+                                            <p class="text-light mt-1 m-0">Total</p>
+                                        </div><!-- /.card-left -->
+                                        <div class="card-right float-right text-right">
+                                            <i class="icon fade-5 icon-lg pe-7s-users"></i>
+                                        </div><!-- /.card-right -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/.col-->
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Widgets -->
+                <div class="clearfix"></div>
+                <!-- Agent Summary -->
+                <div class="orders">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="card">
+
+                                <div class="card-header">
+                                    <strong>AGENT CALL SUMMARY</strong>
+                                </div>
+
+                                <div class="card-body  card-block">
+
+                                    <div class="table-stats order-table ov-h">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:320px">Agent Name</th>
+                                                    <th style="width:200px">SLA </th>
+                                                    <th>
+                                                        <div>
+                                                            <div style="display: inline-block;width:63px;height:30px;background-color:#00c292;color:whitesmoke;padding:3px">INBOUND</div>
+                                                            <div style="display: inline-block;width:63px;height:30px;background-color:#e6445a;color:whitesmoke;padding:3px">MISSED</div>
+                                                            <div style="display: inline-block;width:76px;height:30px;background-color:#ab8ce4;color:whitesmoke;padding:3px">OUTBOUND</div>
+                                                        </div>
+                                                    </th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.CallList)
+                                                {
+                                                    <tr>
+                                                        <td>@Html.DisplayFor(modelItem => item.Agent)</td>
+                                                        <td>@Html.DisplayFor(modelItem => item.SLA)</td>
+                                                        <td>
+                                                            <div class="progress" style="height: 20px;">
+                                                                <div class="progress-bar " role="progressbar" aria-valuemax=@item.Total aria-valuemin="0" aria-valuenow="@item.Inbound" style="background-color: #00c292;width: @item.Inbound%">
+                                                                    @item.Inbound
+                                                                </div>
+                                                                <div class="progress-bar " role="progressbar" aria-valuemax=@item.Total aria-valuemin="0" aria-valuenow="@item.Missed" style="background-color: #e6445a;width: @item.Missed%">
+                                                                    @item.Missed
+                                                                </div>
+                                                                <div class="progress-bar " role="progressbar" aria-valuemax=@item.Total aria-valuemin="0" aria-valuenow="@item.Outbound" style="background-color: #ab8ce4;width: @item.Outbound%">
+                                                                    @item.Outbound
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        @*<td style="background-color:#f4ff46">INBOUND: @Html.DisplayFor(modelItem => item.Inbound)</td>
+                                                            <td style="background-color:#ff1313">MISSED  : @Html.DisplayFor(modelItem => item.Missed)</td>
+                                                            <td style="background-color:#f3bd8f ">OUTBOUND: @Html.DisplayFor(modelItem => item.Outbound)</td>*@
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div> <!-- /.table-stats -->
+                                </div>
+                            </div> <!-- /.card -->
+                        </div>  <!-- /.col-lg-8 -->
+
+
+                    </div>
+                </div>
+                <!-- /.Agent Summary -->
+                <!-- Q Summary -->
+                <div class="orders">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="card">
+
+                                <div class="card-header">
+                                    <strong>QUEUE CALL SUMMARY</strong>
+                                </div>
+
+                                <div class="card-body  card-block">
+
+                                    <div class="table-stats order-table ov-h">
+                                        <table class="table ">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:320px">QUEUE Name</th>
+                                                    <th style="width:200px">SLA </th>
+                                                    <th>
+                                                        <div>
+                                                            <div style="display:inline-block;width:71px;height:30px;background-color:#03a9f3;color:whitesmoke;padding:3px">ANSWERED</div>
+                                                            <div style="display:inline-block;width:50px;height:30px;background-color:#e6445a;color:whitesmoke;padding:3px">MISSED</div>
+                                                        </div>
+                                                    </th>
+                                                  
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.QCallList != null)
+                                                {
+                                                    foreach (var item in Model.QCallList)
+                                                    {
+                                                <tr>
+                                                    <td>@Html.DisplayFor(modelItem => item.Agent)</td>
+                                                    <td>@Html.DisplayFor(modelItem => item.QSLA)</td>
+                                                    <td>
+                                                        <div class="progress" style="height:20px">
+                                                            <div class="progress-bar " role="progressbar" aria-valuemax=@item.QTotal aria-valuemin="0" aria-valuenow="@item.QAns" style="background-color: #03a9f3;width: @item.QAns%">
+                                                                @item.QAns
+                                                            </div>
+                                                            <div class="progress-bar " role="progressbar" aria-valuemax=@item.QTotal aria-valuemin="0" aria-valuenow="@item.QMissed" style="background-color: #e6445a;width: @item.QMissed%">
+                                                                @item.QMissed
+                                                            </div>
+
+                                                        </div>
+                                                    </td>
+
+
+                                                    @*<td style="background-color:#f4ff46">ANSWERED: @Html.DisplayFor(modelItem => item.QAns)</td>
+                                                    <td style="background-color:#ff1313">MISSED  : @Html.DisplayFor(modelItem => item.QMissed)</td>*@
+                                                </tr>
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div> <!-- /.table-stats -->
+                                </div>
+                            </div> <!-- /.card -->
+                        </div>  <!-- /.col-lg-8 -->
+
+
+                    </div>
+                </div>
+
+                <!-- /Q Summary-->
+               
+
+
+
+        </form>
+    </div><!-- .animated -->
+</div><!-- .content -->
+<div class="clearfix"></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#ddlDuration").change(function () {
+
+            if ($(this).val() == "5") {
+                $("#Div1").show();
+            } else {
+                $("#Div1").hide();
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+
+        $('.progress-bar').each(function () {
+            var min = $(this).attr('aria-valuemin');
+            var max = $(this).attr('aria-valuemax');
+            var now = $(this).attr('aria-valuenow');
+            var siz = (now - min) * 100 / (max - min);
+            $(this).css('width', siz + '%');
+        });
+
+
+        var arNames = $('#ddlDuration').val()
+
+        if (arNames == "5") {
+            //alert(arNames);
+            $("#Div1").show();
+        } else {
+            $("#Div1").hide();
+        }
+
+        "use strict";
+
+        //bar chart
+        var aData = document.getElementById("StudentId").value;
+
+        var aData = JSON.parse(aData);
+        //alert(aData)
+        var ctx = document.getElementById("barChart");
+        //    ctx.height = 200;
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: aData[4],
+                datasets: [
+                    {
+                        label: "ANSWERED",
+                        data: aData[1],
+                        borderColor: "#f4ff46",
+                        borderWidth: "0",
+                        backgroundColor: "#f4ff46"
+                    },
+                    {
+                        label: "MISSED",
+                        data: aData[2],
+                        borderColor: "rgba(0,0,0,0.09)",
+                        borderWidth: "0",
+                        backgroundColor: "rgba(0,0,0,0.07)"
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+
+
+
+    })
+</script>
+<!--  Chart js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.bundle.min.js"></script>

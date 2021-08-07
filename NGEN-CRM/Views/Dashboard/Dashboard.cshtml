@@ -1,0 +1,331 @@
+﻿@model NGEN_CRM.Models.Home
+
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Dashboard" method="post">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>CALL SUMMARY</strong>
+                        </div>
+                        <div class="card-body card-block">
+
+                            <div class="row form-group">
+                                <div class="col col-md-1"><label for="select" class=" form-control-label">Date</label></div>
+                                <div class="col-12 col-md-2">
+                                    @Html.DropDownListFor(model => model.Duration, new List<SelectListItem>()
+                                               {
+                                                  new SelectListItem() { Text = "Please select", Value = "0"} ,
+                                                  new SelectListItem() { Text = "Yesterday", Value = "1"} ,
+                                                  new SelectListItem() { Text = "Last7Days", Value = "2"},
+                                                  new SelectListItem() { Text = "Last15Days", Value = "3"},
+                                                  new SelectListItem() { Text = "Last30Days", Value = "4"},
+                                                  new SelectListItem() { Text = "CustomRange", Value = "5"},
+                                               }, new { @id = "ddlDuration", @class = "form-control", @required = true })
+
+                                </div>
+                                <div id="Div1" style="display:none" class="col col-md-8">
+
+                                    <div class="row form-group">
+                                        <div class="col col-md-2"><label for="hf-email" class=" form-control-label">From Date</label></div>
+                                        <div class="input-group col-md-4">
+
+                                            <input type="date" id="hf-password" value="@Model.FromDate" name="FromDate" placeholder="Select From Date..." class="form-control">
+                                        </div>
+
+
+                                        <div class="col col-md-2"><label for="hf-password" class=" form-control-label">To Date</label></div>
+                                        <div class="input-group col-md-4">
+
+                                            <input type="date" id="hf-password" value="@Model.ToDate" name="ToDate" placeholder="Select To Date..." class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <hr />
+                        <!-- Widgets  -->
+                        <div class="row">
+
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body" style="background-color:#f4ff46">
+                                        <div class="stat-widget-five">
+
+                                            <div class="stat-content">
+                                                <div class="text-left dib">
+                                                    <div class="stat-icon dib flat-color-1">
+                                                        <i class="pe-7s-bottom-arrow" style="line-height: 1.5"></i>
+                                                    </div>
+                                                    <div class="stat-text"><span class="count">@ViewBag.Inbound</span></div>
+                                                    <div class="stat-heading">INBOUND</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body" style="background-color:#ff1313">
+                                        <div class="stat-widget-five">
+                                            <div class="stat-icon dib flat-color-3">
+                                                <i class="pe-7s-close-circle" style="line-height: 1.5"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <div class="text-left dib">
+                                                    <div class="stat-text"><span class="count">@ViewBag.Missed</span></div>
+                                                    <div class="stat-heading">MISSED</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body" style="background-color: #f3bd8f">
+                                        <div class="stat-widget-five">
+                                            <div class="stat-icon dib flat-color-2">
+                                                <i class="pe-7s-up-arrow" style="line-height: 1.5"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <div class="text-left dib">
+                                                    <div class="stat-text"><span class="count">@ViewBag.Outbound</span></div>
+                                                    <div class="stat-heading">OUTBOUND</div>
+                                                    <input id="StudentId"
+                                                           name="Qstring"
+                                                           type="hidden"
+                                                           value=@Model.Qstring />
+                                                    <input id="StudentId1"
+                                                           name="Agentstring"
+                                                           type="hidden"
+                                                           value=@Model.Agentstring />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body" style="background-color:#509fe4">
+                                        <div class="stat-widget-five">
+                                            <div class="stat-icon dib flat-color-4">
+                                                <i class="pe-7s-users" style="line-height: 1.5"></i>
+                                            </div>
+                                            <div class="stat-content">
+                                                <div class="text-left dib">
+                                                    <div class="stat-text"><span class="count">@ViewBag.Total</span></div>
+                                                    <div class="stat-heading">Total</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Widgets -->
+            <div class="clearfix"></div>
+            <div class="card">
+                <div class="col-lg-10 col-md-10">
+
+                    <div class="card-body " style="height: 420px">
+                        <h4 class="mb-3">AGENT CALL SUMMARY </h4>
+                        <canvas id="dvChart"></canvas>
+                    </div>
+
+                </div><!-- /# column -->
+            </div>
+            <div class="card">
+                <div class="col-lg-10 col-md-10">
+
+                    <div class="card-body" style="height: 420px">
+                        <h4 class="mb-3">QUEUE CALL SUMMARY</h4>
+                        <canvas id="barChart"></canvas>
+                    </div>
+
+                </div><!-- /# column -->
+            </div>
+
+        </form>
+    </div><!-- .animated -->
+</div><!-- .content -->
+<div class="clearfix"></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#ddlDuration").change(function () {
+
+            if ($(this).val() == "5") {
+                $("#Div1").show();
+            } else {
+                $("#Div1").hide();
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        var arNames = $('#ddlDuration').val()
+
+        if (arNames == "5") {
+            //alert(arNames);
+            $("#Div1").show();
+        } else {
+            $("#Div1").hide();
+        }
+
+        "use strict";
+
+        //bar chart
+        var aData = document.getElementById("StudentId").value;
+        var aData = JSON.parse(aData);
+
+        var aData1 = document.getElementById("StudentId1").value;
+        var aData1 = JSON.parse(aData1);
+  //qbar//
+        var ctx = document.getElementById("barChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            height: 200,
+            data: {
+                labels: aData[4],
+                datasets: [
+                    {
+                        label: "SLA",
+                        data: aData[5],
+                        borderColor: "rgba(0, 194, 146, 0.9)",
+                        borderWidth: "0",
+                        backgroundColor: "rgba(0, 194, 146, 0.5)"
+                    },
+                    {
+                        label: "ANSWERED",
+                        data: aData[1],
+                        borderColor: "#f4ff46",
+                        borderWidth: "0",
+                        backgroundColor: "#f4ff46"
+                    },
+                    {
+                        label: "MISSED",
+                        data: aData[2],
+                        borderColor: "#ff1313",
+                        borderWidth: "0",
+                        backgroundColor: "#ff1313"
+                    }
+                     
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [
+                        {
+
+                            ticks: {
+                                autoSkip: false,
+                                maxBarThickness: 10
+                            
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+
+        //bar chart Agent
+       
+        var ctx = document.getElementById("dvChart");
+        //ctx.height = 200;
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            //height: 200,
+            data: {
+                labels: aData1[7],
+                datasets: [
+                     {
+                        label: "SLA",
+                        data: aData1[8],
+                        borderColor: "rgba(0, 194, 146, 0.9)",
+                        borderWidth: "0",
+                        backgroundColor: "rgba(0, 194, 146, 0.5)"
+                    },
+                    {
+                        label: "INBOUND",
+                        data: aData1[0],
+                        borderColor: "#f4ff46",
+                        borderWidth: "0",
+                        backgroundColor: "#f4ff46"
+                    },
+                    {
+                        label: "MISSED",
+                        data: aData1[2],
+                        borderColor: "#ff1313",
+                        borderWidth: "0",
+                        backgroundColor: "#ff1313"
+                    },
+                    {
+                        label: "OUTBOUND",
+                        data: aData1[1],
+                        borderColor: "#f3bd8f",
+                        borderWidth: "0",
+                        backgroundColor: "#f3bd8f"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [
+                        {
+                            //barPercentage: 0.4,
+                            ticks: {
+                                autoSkip: false,
+                                maxBarThickness: 10
+                              
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+
+
+
+    }  )
+</script>
+<!--  Chart js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.3/dist/Chart.bundle.min.js"></script>

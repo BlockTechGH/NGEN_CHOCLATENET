@@ -1,0 +1,754 @@
+﻿@model NGEN_CRM.Models.Home
+
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Create" method="post">
+            <div class="card">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>CALL REPORT</strong>
+                            </div>
+                            <div class="card-body card-block">
+                                <div class="row form-group">
+                                    <div class="col col-md-1"><label for="email-input" class=" form-control-label">Report</label></div>
+                                    <div class="col-12 col-md-2">
+
+                                        @Html.DropDownListFor(model => model.Report, new List<SelectListItem>()
+                                                   {
+                                                      new SelectListItem() { Text = "Please select", Value = ""} ,
+                                                      new SelectListItem() { Text = "Call Summary", Value = "1"} ,
+                                                      new SelectListItem() { Text = "Call Details", Value = "2"},
+                                                      new SelectListItem() { Text = "Agent Summary", Value = "3"},
+                                                      new SelectListItem() { Text = "Missed Call", Value = "4"},
+                                                        new SelectListItem() { Text = "Queue Summary", Value = "5"},
+                                                   }, new { @id = "ddlReport", @class = "form-control", @required = true })
+
+                                    </div>
+                                    <div class="col col-md-8">
+
+                                        <div class="row form-group">
+                                            <div class="col col-md-2"><label for="hf-email" class=" form-control-label">Call Type</label></div>
+                                            <div class="input-group col-md-4">
+                                                @Html.DropDownListFor(model => model.CallType, new List<SelectListItem>()
+                                                                                                 {
+                                                                                                    new SelectListItem() { Text = "Please select", Value = "0"} ,
+                                                                                                    new SelectListItem() { Text = "Inbound", Value = "1"} ,
+                                                                                                    new SelectListItem() { Text = "Outbound", Value = "2"},
+                                                                                                    new SelectListItem() { Text = "Both", Value = "3"},
+                                                                                                 }, new { @id = "ddlDirection", @class = "form-control", @required = true })
+                                            </div>
+
+
+                                            <div class="col col-md-2"><label for="hf-password" class=" form-control-label">Agent</label></div>
+                                            <div class="input-group col-lg-3 col-md-3">
+                                                @*@Html.DropDownList("AgentIds", (MultiSelectList)ViewBag.Agents, new { multiple = "multiple", @id = "ddlAgent" })*@
+                                                @Html.ListBoxFor(m => m.AgentIds, (SelectList)ViewBag.Agents, new { @class = "listbox", @id = "ddlAgent" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col col-md-1"><label for="select" class=" form-control-label">Date</label></div>
+                                    <div class="col-12 col-md-2">
+                                        @Html.DropDownListFor(model => model.Duration, new List<SelectListItem>()
+                                                   {
+                                                      new SelectListItem() { Text = "Please select", Value = ""} ,
+                                                      new SelectListItem() { Text = "Yesterday", Value = "1"} ,
+                                                      new SelectListItem() { Text = "Last7Days", Value = "2"},
+                                                      new SelectListItem() { Text = "Last15Days", Value = "3"},
+                                                      new SelectListItem() { Text = "Last30Days", Value = "4"},
+                                                      new SelectListItem() { Text = "CustomRange", Value = "5"},
+                                                   }, new { @id = "ddlDuration", @class = "form-control", @required = true })
+
+                                    </div>
+                                    <div id="Div1" style="display:none" class="col col-md-8">
+
+                                        <div class="row form-group">
+                                            <div class="col col-md-2"><label for="hf-email" class=" form-control-label">From Date</label></div>
+                                            <div class="input-group col-md-4">
+
+                                                <input type="date" id="hf-password" value="@Model.FromDate" name="FromDate" placeholder="Select From Date..." class="form-control">
+                                            </div>
+
+
+                                            <div class="col col-md-2"><label for="hf-password" class=" form-control-label">To Date</label></div>
+                                            <div class="input-group col-md-4">
+
+                                                <input type="date" id="hf-password" value="@Model.ToDate" name="ToDate" placeholder="Select To Date..." class="form-control">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-1"><label for="email-input" class=" form-control-label">Queue</label></div>
+                                    <div class="input-group col-md-2">
+
+                                       @* @Html.DropDownList("QueueIds", (MultiSelectList)ViewBag.Queue, new { multiple = "multiple", @id = "ddlQueue" })*@
+                                        @Html.ListBoxFor(m => m.QueueIds, (MultiSelectList)ViewBag.Queue, new { @class = "listbox", @id = "ddlQueue" })
+
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <input type="hidden" name="GridHtml" />
+                                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+
+                    </div>
+                </div>
+            </div>
+            <!-- /Widgets -->
+            <div class="clearfix"></div>
+            <!-- Call Summary -->
+            <div class="orders" id="DivSummary" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <strong>CALL SUMMARY</strong>
+
+                                <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="btncsv1" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv()">CSV</button>&nbsp;
+                                <button type="submit" id="btnPDF1" name="btn" value="PDF" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                                <button type="submit" id="btnSubmit" value="Excel" name="btn" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
+
+                            </div>
+
+                            <div class="card-body  card-block">
+
+                                <div class="table-stats order-table ov-h" id="Grid">
+                                    <table class="table" id="tableSummary">
+                                        <thead>
+                                            <tr>
+                                                <th>Inbound Answered</th>
+                                                <th>Inbound Missed </th>
+                                                <th>Total Inbound</th>
+                                                <th>SLA%</th>
+                                                <th>Outbound</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CallList != null)
+                                            {
+                                                foreach (var item in Model.CallList)
+                                                {
+                                                    <tr>
+
+                                                        <td>@Html.DisplayFor(modelItem => item.InboundAns)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Missed)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Inbound)</td>
+                                                        <td>@Html.DisplayFor(modelItem => item.SLA)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Outbound)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Total)</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+
+                </div>
+            </div>
+            <!-- /.orders -->
+            <!-- /.Call Details -->
+            <div class="orders" id="DivDetails" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <strong>CALL DETAILS</strong>
+                                @if(@Model.CallList!=null)
+                                {<strong><span class="count"> -@Model.CallList.Count </span> </strong>}
+
+    <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+    <button type="button" id="btncsv2" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv2()">CSV</button>&nbsp;
+    <button type="submit" id="btnPDF2" name="btn" value="PDF1" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+    <button type="submit" value="Excel1" id="btnSubmit2" name="btn" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
+</div>
+
+                            <div class="card-body  card-block">
+
+                                <div class="table-stats order-table ov-h" id="Grid">
+                                    <table class="table" id="tableDetails">
+                                        <thead>
+                                            <tr>
+                                                <th>Phone.No</th>
+                                                <th>Call Date </th>
+                                                <th>Call Time</th>
+                                                <th>Duration</th>
+                                                <th>Call Type(Inbound/Outbound)</th>
+                                                <th>Agent</th>
+                                                <th>Queue Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CallList != null)
+                                            {
+                                                foreach (var item in Model.CallList)
+                                                {
+                                            <tr>
+
+                                                <td>@Html.DisplayFor(modelItem => item.PhoneNo)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CallDate)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CallTime)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Duration)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CallType)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.Agent)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.QueueName)</td>
+                                            </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+
+                </div>
+            </div>
+
+            <!-- .Missed Call Details -->
+            <div class="orders" id="DivMissed" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <strong>MISSED CALLS DETAILS</strong>
+                                @if (@Model.CallList != null)
+                                {<strong><span class="count"> -@Model.CallList.Count </span> </strong>}
+                                <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="btncsv3" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv3()">CSV</button>&nbsp;
+                                <button type="submit" id="btnPDF2" name="btn" value="PDF2" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                                <button type="submit" value="Excel2" id="btnSubmit" name="btn" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
+                            </div>
+
+                            <div class="card-body  card-block">
+
+                                <div class="table-stats order-table ov-h" id="Grid">
+                                    <table class="table" id="tableMissed">
+                                        <thead>
+                                            <tr>
+                                                <th>Phone.No</th>
+                                                <th>Call Date </th>
+                                                <th>Call Time</th>
+                                                <th>Agent</th>
+                                                <th>Queue Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CallList != null)
+                                            {
+                                                foreach (var item in Model.CallList)
+                                                {
+                                            <tr>
+
+                                                <td>@Html.DisplayFor(modelItem => item.PhoneNo)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CallDate)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.CallTime)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.Agent)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.QueueName)</td>
+                                            </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+
+                </div>
+            </div>
+            <!-- /.Missed Call Details -->
+            <!-- .Agent Report -->
+            <div class="orders" id="DivAgent" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <strong>AGENT CALLS</strong>
+                                @if (@Model.CallList != null)
+                                {<strong><span class="count"> -@Model.CallList.Count </span> </strong>}
+                                <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="btncsv4" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv4()">CSV</button>&nbsp;
+                                <button type="submit" id="btnPDF4" name="btn" value="PDF3" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                                <button type="submit" value="Excel3" name="btn" id="btnSubmit" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
+                            </div>
+
+                            <div class="card-body  card-block">
+
+                                <div class="table-stats order-table ov-h" id="Grid">
+                                    <table class="table" id="tableAgent">
+                                        <thead>
+                                            <tr>
+                                                <th>Agent Name</th>
+                                                <th>Inbound Answered </th>
+                                                <th>Inbound Missed</th>
+                                                <th>Total Inbound</th>
+                                                <th>SLA% </th>
+                                                <th>Outbound</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CallList != null)
+                                            {
+                                                foreach (var item in Model.CallList)
+                                                {
+                                                    <tr>
+
+                                                        <td>@Html.DisplayFor(modelItem => item.Agent)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.InboundAns)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Missed)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Inbound)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.SLA)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Outbound)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Total)</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+
+                </div>
+            </div>
+            <!-- /.Agent Report -->
+            <!-- .QCall summary Report -->
+            <div class="orders" id="DivQueue" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <strong>QUEUE CALLS</strong>
+                                @if (@Model.QCallList != null)
+                                {<strong><span class="count"> -@Model.QCallList.Count </span> </strong>}
+                                <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="btncsv5" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv5()">CSV</button>&nbsp;
+                                <button type="submit" id="btnPDF5" name="btn" value="PDF4" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                                <button type="submit" name="btn" value="Excel4" id="btnSubmit" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
+                            </div>
+
+                            <div class="card-body  card-block">
+
+                                <div class="table-stats order-table ov-h" id="Grid">
+                                    <table class="table" id="tableQueue">
+                                        <thead>
+                                            <tr>
+                                                <th>QUEUE Name</th>
+                                                <th>Inbound </th>
+                                                <th>Queue Missed</th>
+                                                <th>Queue Answered</th>
+                                                <th>SLA% </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.QCallList != null)
+                                            {
+                                                foreach (var item in Model.QCallList)
+                                                {
+                                                    <tr>
+
+                                                        <td>@Html.DisplayFor(modelItem => item.Agent)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.QTotal)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.QMissed)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.QAns)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.QSLA)</td>
+
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+
+                </div>
+            </div>
+            <!-- /. Report -->
+            <!-- .Missed Call Details -->
+            <div class="orders" id="DivIVRMissed" style="display:none">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <strong>IVR MISSED CALLS</strong>
+                                @if (@Model.CallList != null)
+                                {<strong><span class="count"> -@Model.CallList.Count </span> </strong>}
+                                <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+                                <button type="button" id="btncsv6" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv6()">CSV</button>&nbsp;
+                                <button type="submit" id="btnPDF2" name="btn" value="PDF5" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                                <button type="submit" value="Excel5" id="btnSubmit" name="btn" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
+                            </div>
+
+                            <div class="card-body  card-block">
+
+                                <div class="table-stats order-table ov-h" id="Grid">
+                                    <table class="table" id="tableIVR">
+                                        <thead>
+                                            <tr>
+                                                <th>Phone.No</th>
+                                                <th>Call Date </th>
+                                                <th>Call Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.CallList != null)
+                                            {
+                                                foreach (var item in Model.CallList)
+                                                {
+                                                    <tr>
+
+                                                        <td>@Html.DisplayFor(modelItem => item.PhoneNo)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.CallDate)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.CallTime)</td>
+                                                     
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div> <!-- /.table-stats -->
+                            </div>
+                        </div> <!-- /.card -->
+                    </div>  <!-- /.col-lg-8 -->
+
+
+                </div>
+            </div>
+            <!-- /.Missed Call Details -->
+
+
+        </form>
+    </div>
+</div><!-- .animated -->
+
+<div class="clearfix"></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#ddlDuration").change(function () {
+
+            if ($(this).val() == "5") {
+                $("#Div1").show();
+            } else {
+                $("#Div1").hide();
+            }
+        });
+    });
+    $(function () {
+        $("#ddlAgent").change(function () {
+
+            if ($(this).val() != null) {
+                $("#ddlQueue").multiselect("disable");
+            } else {
+                $("#ddlQueue").multiselect("enable");
+
+            }
+        });
+    });
+    $(function () {
+        $("#ddlQueue").change(function () {
+            if ($(this).val() == "IVR MissedCall") {
+               
+                $("#DivIVRMissed").show();
+                $("#DivDetails").hide();
+                $("#DivSummary").hide();
+                $("#DivMissed").hide();
+                $("#DivAgent").hide();
+                $("#DivQueue").hide();
+                $("#ddlAgent").multiselect("disable");
+            }
+            else if ($(this).val() != null) {
+                $("#DivIVRMissed").hide();
+                $("#ddlAgent").multiselect("disable");
+            }
+            else {
+                $("#DivIVRMissed").hide();
+                $("#ddlAgent").multiselect("enable");
+            }
+            //if ($(this).val() != null) {
+               
+            //    $("#ddlAgent").multiselect("disable");
+            //    if (this.val() == "IVR MissedCall")
+            //    {
+            //        alert($(this).val())
+            //        $("#DivIVRMissed").show();
+            //    }
+            //}
+            //else {
+               
+            //    $("#ddlAgent").multiselect("enable");
+
+            //}
+        });
+    });
+    $(function () {
+        $("#ddlReport").change(function () {
+            $("#ddlDuration").val("");
+            if ($(this).val() == "1") {
+                $("#DivSummary").show();
+                $("#DivDetails").hide();
+                $("#DivMissed").hide();
+                $("#DivAgent").hide();
+                $("#DivQueue").hide();
+                $("#DivIVRMissed").hide();
+                document.getElementById("ddlDirection").disabled = true;
+                $("#ddlAgent").multiselect("disable");
+                $("#ddlQueue").multiselect("disable");
+                
+
+            }
+            else if ($(this).val() == "2") {
+                $("#DivDetails").show();
+                $("#DivSummary").hide();
+                $("#DivMissed").hide();
+                $("#DivAgent").hide();
+                $("#DivQueue").hide();
+                $("#DivIVRMissed").hide();
+                $("#ddlAgent").multiselect("enable");
+                $("#ddlQueue").multiselect("enable");
+                document.getElementById("ddlDirection").disabled = false;
+                //document.getElementById("ddlAgent").disabled = false;
+            }
+                //misssed call//
+            else if ($(this).val() == "4") {
+               
+                $("#DivDetails").hide();
+                $("#DivSummary").hide();
+                $("#DivMissed").show();
+                $("#DivAgent").hide();
+                $("#DivQueue").hide();
+                $("#ddlDirection").val("1");
+                $("#ddlAgent").multiselect("enable");
+                $("#ddlQueue").multiselect("enable");
+                $("#DivIVRMissed").hide();
+
+            }
+            else if ($(this).val() == "3") {
+                $("#DivDetails").hide();
+                $("#DivSummary").hide();
+                $("#DivMissed").hide();
+                $("#DivAgent").show();
+                $("#DivQueue").hide();
+                $("#ddlDirection").val("3");
+                $("#DivIVRMissed").hide();
+                document.getElementById("ddlDirection").disabled = true;
+                $("#ddlAgent").multiselect("enable");
+                $("#ddlQueue").multiselect("disable");
+            }
+            else if ($(this).val() == "5") {
+                $("#DivDetails").hide();
+                $("#DivSummary").hide();
+                $("#DivMissed").hide();
+                $("#DivAgent").hide();
+                $("#DivQueue").show();
+                $("#DivIVRMissed").hide();
+                $("#ddlDirection").val("1");
+                document.getElementById("ddlDirection").disabled = true;
+                $("#ddlAgent").multiselect("disable");
+                $("#ddlQueue").multiselect("enable");
+            }
+        });
+    });
+</script>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script src="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('.listbox').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+
+        //$(function () {
+        //    $('#ddlAgent').multiselect({
+        //        includeSelectAllOption: true
+        //    });
+        //});
+
+        //$(function () {
+        //    $('#ddlQueue').multiselect({
+        //        includeSelectAllOption: true
+        //    });
+        //});
+
+        $(function () {
+           
+                var arNames5 = $('#ddlQueue').val()
+                if (arNames5 != null) {
+                if (arNames5 == "IVR MissedCall")
+                {
+                    $("#DivIVRMissed").show();
+                    $("#DivDetails").hide();
+                    $("#DivSummary").hide();
+                    $("#DivMissed").hide();
+                    $("#DivAgent").hide();
+                    $("#DivQueue").hide();
+                }
+                $("#ddlAgent").multiselect("disable");
+                   
+                } else {
+
+                    $("#ddlAgent").multiselect("enable");
+
+                }
+           
+        });
+
+        var arNames = $('#ddlDuration').val()
+        var reportName = $('#ddlReport').val()
+        if (arNames == "5") {
+            $("#Div1").show();
+        } else {
+            $("#Div1").hide();
+        }
+
+        if (reportName == "1") {
+            $("#DivSummary").show();
+            document.getElementById("ddlDirection").disabled = true;
+            $("#ddlAgent").multiselect("disable");
+            $("#ddlQueue").multiselect("disable");
+        }
+        else if (reportName == "2") {
+            $("#DivDetails").show();
+            document.getElementById("ddlDirection").disabled = false;
+            $("#ddlAgent").multiselect("enable");
+        }
+        else if (reportName == "4") {
+            $("#DivMissed").show();
+            document.getElementById("ddlDirection").disabled = true;
+            $("#ddlAgent").multiselect("enable");
+        }
+        else if (reportName == "3") {
+            $("#DivAgent").show();
+            document.getElementById("ddlDirection").disabled = true;
+            $("#ddlAgent").multiselect("enable");
+            $("#ddlQueue").multiselect("disable");
+        }
+        else if (reportName == "5") {
+            $("#DivQueue").show();
+            document.getElementById("ddlDirection").disabled = true;
+            $("#ddlAgent").multiselect("disable");
+            $("#ddlQueue").multiselect("enable");
+        }
+    }
+    )
+</script>
+<script type="text/javascript">
+
+    $(function () {
+        $("#btnPDF1").click(function () {
+            $("input[name='GridHtml']").val($("#DivSummary").html());
+        });
+    });
+    $(function () {
+        $("#btnPDF2").click(function () {
+            $("input[name='GridHtml']").val($("#DivDetails").html());
+        });
+    });
+    $(function () {
+        $("#btnPDF3").click(function () {
+            $("input[name='GridHtml']").val($("#DivMissed").html());
+        });
+    });
+    $(function () {
+        $("#btnPDF4").click(function () {
+            $("input[name='GridHtml']").val($("#DivAgent").html());
+        });
+    });
+    $(function () {
+        $("#btnPDF5").click(function () {
+            $("input[name='GridHtml']").val($("#DivQueue").html());
+        });
+    });
+    $(function () {
+        $("#btnPDF6").click(function () {
+            $("input[name='GridHtml']").val($("#DivIVRMissed").html());
+        });
+    });
+</script>
+<script src="../Scripts/jquery.tabletoCSV.js"></script>
+
+<script type="text/javascript">
+    function exporttocsv() {
+
+        $("#tableSummary").tableToCSV({
+            filename: 'CallSummaryReport'
+        });
+    }
+    function exporttocsv2() {
+
+        $("#tableDetails").tableToCSV({
+            filename: 'CallDetailsReport'
+        });
+    }
+    function exporttocsv3() {
+
+        $("#tableMissed").tableToCSV({
+            filename: 'MissedCallReport'
+        });
+    }
+    function exporttocsv4() {
+
+        $("#tableAgent").tableToCSV({
+            filename: 'AgentCallReport'
+        });
+    }
+    function exporttocsv5() {
+
+        $("#tableQueue").tableToCSV({
+            filename: 'QueueCallReport'
+        });
+    }
+    function exporttocsv6() {
+
+        $("#tableIVR").tableToCSV({
+            filename: 'IVRMissedCallReport'
+        });
+    }
+</script>

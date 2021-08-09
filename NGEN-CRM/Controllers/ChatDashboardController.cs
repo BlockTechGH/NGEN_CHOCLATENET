@@ -17,17 +17,18 @@ namespace NGEN_CRM.Controllers
             Chat obj = new Chat();
             ViewBag.ShowDiv = false;
             ViewBag.Message = "Your contact page.";
-            obj.ToDate =Convert.ToDateTime ("2021/07/30").ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-            obj.FromDate = Convert.ToDateTime("2021/07/29").ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            obj.ToDate =Convert.ToDateTime ("2021/07/25").ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            obj.FromDate = Convert.ToDateTime("2021/07/24").ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             //obj.ToDate = DateTime.Now.AddDays(1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             //obj.FromDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             ChatDbLink ObjCh = new ChatDbLink();
             obj = ObjCh.GetWidget(obj);
             obj.ChatList = ObjCh.GetAgentData(obj);
-            ////obj.QCallList = HomeRepository.GetAgentQReport(obj);
+            obj.ChannelList = ObjCh.GetChannelData(obj);
             string TotalConv =(obj.TotalConversation);
             string TotalMsg = (obj.TotalMsg);
             string TotalAvgT = (obj.TotalAvgRespTime);
+          
             ViewBag.TotalConv = TotalConv;
             ViewBag.TotalMsg = TotalMsg;
             ViewBag.TotalAvgT = TotalAvgT;
@@ -70,6 +71,7 @@ namespace NGEN_CRM.Controllers
             ChatDbLink ObjCh = new ChatDbLink();
             obj = ObjCh.GetWidget(obj);
             obj.ChatList = ObjCh.GetAgentData(obj);
+            obj.ChannelList = ObjCh.GetChannelData(obj);
             string TotalConv = (obj.TotalConversation);
             string TotalMsg = (obj.TotalMsg);
             string TotalAvgT = (obj.TotalAvgRespTime);

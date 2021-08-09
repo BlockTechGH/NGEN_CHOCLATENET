@@ -166,6 +166,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ChatDashboard.cs" />
     <Compile Include="Controllers\ChatDashboardController.cs" />
+    <Compile Include="Controllers\ChatReportController.cs" />
+    <Compile Include="Controllers\ChatWallboardController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -183,6 +185,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Agent.cs" />
+    <Compile Include="Models\Channel.cs" />
     <Compile Include="Models\Chat.cs" />
     <Compile Include="Models\ChatDbLink.cs" />
     <Compile Include="Models\CLSCommen.cs" />
@@ -310,6 +313,9 @@
     <Content Include="Views\Wallboard\Index.cshtml" />
     <Content Include="Views\UserRegistration\Create.cshtml" />
     <Content Include="Views\ChatDashboard\Dashboard.cshtml" />
+    <Content Include="Views\ChatWallboard\Dashboard.cshtml" />
+    <Content Include="Views\ChatReport\Report.cshtml" />
+    <Content Include="Views\ChatWallboard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

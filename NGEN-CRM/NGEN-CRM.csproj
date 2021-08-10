@@ -316,6 +316,9 @@
     <Content Include="Views\ChatWallboard\Dashboard.cshtml" />
     <Content Include="Views\ChatReport\Report.cshtml" />
     <Content Include="Views\ChatWallboard\Index.cshtml" />
+    <Content Include="Views\Home\IndexPa.cshtml" />
+    <Content Include="Views\Wallboard\IndexPa.cshtml" />
+    <Content Include="Views\ChatWallboard\IndexPa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

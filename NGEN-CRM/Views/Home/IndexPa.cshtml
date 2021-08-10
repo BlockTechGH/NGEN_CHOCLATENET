@@ -1,0 +1,191 @@
+﻿
+@model NGEN_CRM.Models.Home
+
+<!-- Widgets  -->
+
+<div class="row" style="padding-left: 28px;padding-right: 28px">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-flat-color-1">
+            <div class="card-body">
+                <div class="card-left pt-1 float-left">
+                    <h1 class="mb-0 fw-r">
+
+                        <span><strong>@ViewBag.Inbound</strong></span>
+                    </h1>
+                    <p class="text-light mt-1 m-0">INBOUND</p>
+                </div><!-- /.card-left -->
+                <div class="card-right float-right text-right">
+                    <i class="icon fade-5 icon-lg pe-7s-bottom-arrow"></i>
+                </div><!-- /.card-right -->
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white " style="background-color:#e6445a">
+            <div class="card-body">
+                <div class="card-left pt-1 float-left">
+                    <h1 class="mb-0 fw-r">
+
+                        <span><strong>@ViewBag.Missed</strong></span>
+                    </h1>
+                    <p class="text-light mt-1 m-0">MISSED</p>
+                </div><!-- /.card-left -->
+                <div class="card-right float-right text-right">
+                    <i class="icon fade-5 icon-lg pe-7s-close-circle"></i>
+
+                </div><!-- /.card-right -->
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-flat-color-2">
+            <div class="card-body">
+                <div class="card-left pt-1 float-left">
+                    <h1 class="mb-0 fw-r">
+                        <span><strong>@ViewBag.Outbound</strong></span>
+                    </h1>
+                    <p class="text-light mt-1 m-0">OUTBOUND</p>
+                </div><!-- /.card-left -->
+                <div class="card-right float-right text-right">
+                    <i class="icon fade-5 icon-lg pe-7s-up-arrow"></i>
+                </div><!-- /.card-right -->
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+    <div class="col-sm-6 col-lg-3">
+        <div class="card text-white bg-flat-color-3">
+            <div class="card-body">
+                <div class="card-left pt-1 float-left">
+                    <h1 class="mb-0 fw-r">
+                        <span><strong>@ViewBag.Total</strong></span>
+                    </h1>
+                    <p class="text-light mt-1 m-0">Total</p>
+                </div><!-- /.card-left -->
+                <div class="card-right float-right text-right">
+                    <i class="icon fade-5 icon-lg pe-7s-users"></i>
+                </div><!-- /.card-right -->
+            </div>
+        </div>
+    </div>
+    <!--/.col-->
+</div>
+<div class="clearfix"></div>
+<!-- Agent Summary -->
+<div class="orders">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>AGENT CALL SUMMARY</strong>
+                </div>
+                <div class="card-body  card-block">
+                    <div class="table-stats order-table ov-h">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:320px">Agent Name</th>
+                                    <th style="width:200px">SLA </th>
+                                    <th>
+                                        <div>
+                                            <div style="display: inline-block;width:63px;height:30px;background-color:#00c292;color:whitesmoke;padding:3px">INBOUND</div>
+                                            <div style="display: inline-block;width:63px;height:30px;background-color:#e6445a;color:whitesmoke;padding:3px">MISSED</div>
+                                            <div style="display: inline-block;width:76px;height:30px;background-color:#ab8ce4;color:whitesmoke;padding:3px">OUTBOUND</div>
+                                        </div>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.CallList)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Agent)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.SLA)</td>
+                                        <td>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar " role="progressbar" aria-valuemax=@item.Total aria-valuemin="0" aria-valuenow="@item.Inbound" style="background-color: #00c292;width: @item.Inbound%">
+                                                    @item.Inbound
+                                                </div>
+                                                <div class="progress-bar " role="progressbar" aria-valuemax=@item.Total aria-valuemin="0" aria-valuenow="@item.Missed" style="background-color: #e6445a;width: @item.Missed%">
+                                                    @item.Missed
+                                                </div>
+                                                <div class="progress-bar " role="progressbar" aria-valuemax=@item.Total aria-valuemin="0" aria-valuenow="@item.Outbound" style="background-color: #ab8ce4;width: @item.Outbound%">
+                                                    @item.Outbound
+                                                </div>
+                                            </div>
+                                        </td>
+                                        @*<td style="background-color:#f4ff46">INBOUND: @Html.DisplayFor(modelItem => item.Inbound)</td>
+                                            <td style="background-color:#ff1313">MISSED  : @Html.DisplayFor(modelItem => item.Missed)</td>
+                                            <td style="background-color:#f3bd8f ">OUTBOUND: @Html.DisplayFor(modelItem => item.Outbound)</td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div> <!-- /.table-stats -->
+                </div>
+            </div> <!-- /.card -->
+        </div>  <!-- /.col-lg-8 -->
+
+    </div>
+</div>
+<!-- /.Agent Summary -->
+<!-- Q Summary -->
+<div class="orders">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>QUEUE CALL SUMMARY</strong>
+                </div>
+                <div class="card-body  card-block">
+                    <div class="table-stats order-table ov-h">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    <th style="width:320px">QUEUE Name</th>
+                                    <th style="width:200px">SLA </th>
+                                    <th>
+                                        <div>
+                                            <div style="display:inline-block;width:71px;height:30px;background-color:#03a9f3;color:whitesmoke;padding:3px">ANSWERED</div>
+                                            <div style="display:inline-block;width:50px;height:30px;background-color:#e6445a;color:whitesmoke;padding:3px">MISSED</div>
+                                        </div>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.QCallList != null)
+                                {
+                                    foreach (var item in Model.QCallList)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Agent)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.QSLA)</td>
+                                            <td>
+                                                <div class="progress" style="height:20px">
+                                                    <div class="progress-bar " role="progressbar" aria-valuemax=@item.QTotal aria-valuemin="0" aria-valuenow="@item.QAns" style="background-color: #03a9f3;width: @item.QAns%">
+                                                        @item.QAns
+                                                    </div>
+                                                    <div class="progress-bar " role="progressbar" aria-valuemax=@item.QTotal aria-valuemin="0" aria-valuenow="@item.QMissed" style="background-color: #e6445a;width: @item.QMissed%">
+                                                        @item.QMissed
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            @*<td style="background-color:#f4ff46">ANSWERED: @Html.DisplayFor(modelItem => item.QAns)</td>
+                                                <td style="background-color:#ff1313">MISSED  : @Html.DisplayFor(modelItem => item.QMissed)</td>*@
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div> <!-- /.table-stats -->
+                </div>
+            </div> <!-- /.card -->
+        </div>  <!-- /.col-lg-8 -->
+
+    </div>
+</div>

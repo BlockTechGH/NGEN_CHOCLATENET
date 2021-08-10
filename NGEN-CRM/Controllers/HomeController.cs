@@ -7,32 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
+//using System.Web.UI;
 using System.Web.UI.HtmlControls;
-
+using System.Timers;
 namespace NGEN_CRM.Controllers
 {
   
     public class HomeController : Controller
     {
-       
-        public ActionResult Index()
+    
+        public  ActionResult Contact()
         {
-            return View();
-        }
-        public ActionResult Dashboard()
-        {
-            return View();
-        }
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
+           
+            //Main(string[] args);
             Home obj = new Home();
             ViewBag.ShowDiv = false;
             ViewBag.Message = "Your contact page.";
@@ -40,9 +27,8 @@ namespace NGEN_CRM.Controllers
             obj.FromDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
-            //obj.QCallList = HomeRepository.GetAgentQReport(obj);
             obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
-            int TotalINBOUND =Convert.ToInt32( obj.Inbound);
+            int TotalINBOUND = Convert.ToInt32(obj.Inbound);
             int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
             int TotalMissed = Convert.ToInt32(obj.Missed);
             int Total = TotalINBOUND + TotalOUTBOUND;

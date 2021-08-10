@@ -11,6 +11,27 @@ namespace NGEN_CRM.Controllers
 {
     public class WallboardController : Controller
     {
+
+        public ActionResult Widget()
+        {
+            Home obj = new Home();
+            obj.ToDate = DateTime.Now.AddDays(1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            obj.FromDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            obj = HomeRepository.GetData(obj);
+            obj.CallList = HomeRepository.GetAgentData(obj);
+            obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
+            DataTable dtQSummary = HomeRepository.GetAgentQReportTable(obj);
+            DataTable dtAgent = HomeRepository.GetAgentTable(obj);
+            int TotalINBOUND = Convert.ToInt32(obj.Inbound);
+            int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
+            int TotalMissed = Convert.ToInt32(obj.Missed);
+            int Total = TotalINBOUND + TotalOUTBOUND;
+            ViewBag.Missed = TotalMissed;
+            ViewBag.Inbound = TotalINBOUND;
+            ViewBag.Outbound = TotalOUTBOUND;
+            ViewBag.Total = Total;
+            return PartialView("IndexPa", obj);
+        }
         // GET: Wallboard
         public ActionResult Index()
         {
@@ -25,9 +46,9 @@ namespace NGEN_CRM.Controllers
             DataTable dtQSummary = HomeRepository.GetAgentQReportTable(obj);
             DataTable dtAgent = HomeRepository.GetAgentTable(obj);
 
-            obj.Qstring = GetChartString(dtQSummary);
-            obj.Agentstring = GetChartString(dtAgent);
-            ViewBag.Agentstring = obj.Agentstring;
+            //obj.Qstring = GetChartString(dtQSummary);
+            //obj.Agentstring = GetChartString(dtAgent);
+            //ViewBag.Agentstring = obj.Agentstring;
             int TotalINBOUND = Convert.ToInt32(obj.Inbound);
             int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
             int TotalMissed = Convert.ToInt32(obj.Missed);

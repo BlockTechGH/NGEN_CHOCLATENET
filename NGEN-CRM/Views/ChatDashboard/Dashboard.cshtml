@@ -68,7 +68,7 @@
 
                                                 <span><strong>@ViewBag.TotalConv</strong></span>
                                             </h1>
-                                            <p class="text-light mt-1 m-0">Total Conversation</p>
+                                            <p class="text-light mt-1 m-0"> Conversation</p>
                                         </div><!-- /.card-left -->
                                         <div class="card-right float-right text-right">
                                             <i class="icon fade-5 icon-lg pe-7s-menu"></i>
@@ -102,7 +102,7 @@
                                             <h1 class="mb-0 fw-r">
                                                 <span><strong>@ViewBag.TotalAvgT</strong></span>
                                             </h1>
-                                            <p class="text-light mt-1 m-0">Avg.ResponseTime</p>
+                                            <p class="text-light mt-1 m-0">Avg.ResponseTime(min)</p>
                                         </div><!-- /.card-left -->
                                         <div class="card-right float-right text-right">
                                             <i class="icon fade-5 icon-lg pe-7s-timer"></i>
@@ -142,23 +142,26 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var item in Model.ChatList)
+                                            @if (Model.ChannelList != null)
                                             {
-                                            <tr>
-                                                <td>@Html.DisplayFor(modelItem => item.AgentName)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.InbConv)</td>
-                                                <td>@Html.DisplayFor(modelItem => item.OutConv) </td>
-                                                <td> @Html.DisplayFor(modelItem => item.Messages)</td>
-                                                <td> @Html.DisplayFor(modelItem => item.AvgRespTime)</td>
-                                                <td> @Html.DisplayFor(modelItem => item.InitRespTime)</td>
-                                            
-                                                <td>
-                                                   
-                                                    <span class="stars"> @item.SuprRating</span>
-                                                </td>
-                                            </tr>
+                                                foreach (var item in Model.ChatList)
+                                                {
+                                                    <tr>
+                                                        <td>@Html.DisplayFor(modelItem => item.AgentName)</td>
+                                                        <td>@Html.DisplayFor(modelItem => item.InbConv)</td>
+                                                        <td>@Html.DisplayFor(modelItem => item.OutConv) </td>
+                                                        <td> @Html.DisplayFor(modelItem => item.Messages)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.AvgRespTime)</td>
+                                                        <td> @Html.DisplayFor(modelItem => item.InitRespTime)</td>
+
+                                                        <td>
+
+                                                            <span class="stars"> @item.SuprRating</span>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             }
-                                        </tbody>
+                                            </tbody>
                                     </table>
                                 </div> <!-- /.table-stats -->
                             </div>

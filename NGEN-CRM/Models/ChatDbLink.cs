@@ -31,14 +31,18 @@ namespace NGEN_CRM.Models
                 sqlCon.Close();
                 foreach (DataRow item in dt.Rows)
                 {
-
-                    obj1.TotalConversation = item["TConv"].ToString();
-                    obj1.TotalMsg = item["TMsg"].ToString();
-                    obj1.TotalAvgRespTime = item["TAvrt"].ToString();
-                    TimeSpan t = TimeSpan.FromSeconds(Convert.ToDouble(obj1.TotalAvgRespTime));
-                    obj1.TotalAvgRespTime = t.Minutes.ToString();
-                    obj1.FromDate = obj.FromDate;
-                    obj1.ToDate = obj.ToDate;
+                    if (item["TConv"].ToString() != "0")
+                    {
+                        obj1.TotalConversation = item["TConv"].ToString();
+                        obj1.TotalMsg = item["TMsg"].ToString();
+                        obj1.TotalAvgRespTime = item["TAvrt"].ToString();
+                        TimeSpan t = TimeSpan.FromSeconds(Convert.ToDouble(obj1.TotalAvgRespTime));
+                        obj1.TotalAvgRespTime = t.Minutes.ToString();
+                    }
+                        obj1.FromDate = obj.FromDate;
+                        obj1.ToDate = obj.ToDate;
+                    
+                   
                 }
                 return obj1;
             }
@@ -136,7 +140,7 @@ namespace NGEN_CRM.Models
             {
                 DataTable dt = new DataTable();
                 sqlCon.Open();
-                SqlCommand sql_cmnd = new SqlCommand("[SP_GetAgentChatSummary]", sqlCon);
+                SqlCommand sql_cmnd = new SqlCommand("SP_GetQueueSummary", sqlCon);
                 sql_cmnd.CommandType = CommandType.StoredProcedure;
                 sql_cmnd.Parameters.AddWithValue("@FromDate", SqlDbType.NVarChar).Value = Obj.FromDate;
                 sql_cmnd.Parameters.AddWithValue("@ToDate", SqlDbType.NVarChar).Value = Obj.ToDate;
@@ -149,7 +153,7 @@ namespace NGEN_CRM.Models
                 foreach (DataRow item in dt.Rows)
                 {
                     obj1 = new Channel();
-                    obj1.ChannelName = item["Employee"].ToString();
+                    obj1.ChannelName = item["OpenChannel"].ToString();
                     obj1.T_Conv = item["TotalCon"].ToString();
                     obj1.T_Msg= item["TMsg"].ToString();
                     obj1.T_AvgResp = item["AvgResTime"].ToString();

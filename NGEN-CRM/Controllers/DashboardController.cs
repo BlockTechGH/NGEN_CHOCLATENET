@@ -21,6 +21,8 @@ namespace NGEN_CRM.Controllers
             ViewBag.Message = "Your contact page.";
             obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+
+            
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
             DataTable dtQSummary = HomeRepository.GetAgentQReportTable(obj);

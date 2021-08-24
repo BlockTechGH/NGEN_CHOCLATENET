@@ -1,0 +1,113 @@
+﻿@model NGEN_CRM.Models.UserRegistration
+<div class="breadcrumbs" style="width:84%">
+    <div class="breadcrumbs-inner">
+        <div class="row m-0">
+            <div class="col-sm-4">
+                <div class="page-header float-left">
+                    <div class="page-title">
+                        <h1>User Registration</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="page-header float-right">
+                    <div class="page-title">
+                        <ol class="breadcrumb text-right">
+                            <li><a href="#">Home</a></li>
+                            <li class="active">User</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Create" method="post">
+
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card">
+
+                        <div class="card-body card-block">
+                            <div class="col-lg-8" style="padding:30px">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <strong>Create User</strong>
+                                    </div>
+                                    <div class="card-body card-block">
+                                        <div class="row form-group">
+                                            <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Name</label></div>
+                                            <div class="col-12 col-md-9"><input id="hf-email" name="Name" value="@Model.Name" required class="form-control"></div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Role</label></div>
+                                            <div class="col-12 col-md-9">
+                                                @Html.DropDownListFor(model => model.RoleName, (SelectList)ViewBag.Roles, "--Select--", new { @class = "form-control m-bot15", @required = true, @id = "RomID" })
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Email</label></div>
+                                            <div class="col-12 col-md-9"><input type="email" id="hf-email" value="@Model.Email" name="Email" required class="form-control"></div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Login_ID</label></div>
+                                            <div class="col-12 col-md-9"><input id="txtLoginId" name="Login_ID" value="@Model.Login_ID" class="form-control" required onkeydown="if (event.keyCode == 13) return false" onchange="CheckUsername()"></div>
+                                            <span id="dis1" style="color: red; display: none; margin-left:242px">* LoginID already exist. Please try another</span>
+
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col col-md-3"><label for="hf-password" class=" form-control-label">Password</label></div>
+                                            <div class="col-12 col-md-9"><input type="password" id="hf-password" name="Password" value="@Model.Password" required class="form-control"></div>
+                                        </div>
+                                        <div class="row form-group" style="float:right">
+                                            <button id="submit" type="submit" class="btn btn-primary btn-sm" style="margin-right:16px"> Submit</button>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card-footer">
+
+                                        @*<button type="reset" class="btn btn-danger btn-sm">
+                                                <i class="fa fa-ban"></i> Reset
+                                            </button>*@
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <hr />
+
+                    </div>
+                </div>
+            </div>
+            <!-- /Widgets -->
+            <div class="clearfix"></div>
+
+
+        </form>
+    </div>
+</div><!-- .animated -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script>
+    function CheckUsername() {
+
+        var name = $("#txtLoginId").val(); //Value entered in the text box
+
+        //jQuery AJAX Post request
+        $.post("/UserRegistration/isUsernameExist", { Username: name },
+            function (data) {
+                if (data == "True") {
+                    $("#dis1").hide();
+                    $("#submit").prop("disabled", false);
+                }
+                else {
+                    $("#dis1").show();
+                    $("#txtLoginId").focus();
+                    $("#submit").prop("disabled", true);
+                }
+            });
+    }
+</script>

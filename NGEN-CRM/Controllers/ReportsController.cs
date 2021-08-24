@@ -91,6 +91,7 @@ namespace NGEN_CRM.Controllers
             }
             if (obj.Report == "2")
             {
+                obj.CallList = HomeRepository.GetCallDetailsReport(obj);
                 if (selectedItems.Count != 0)
                 {
                     obj.CallList = HomeRepository.GetCallDetailsReport(obj);

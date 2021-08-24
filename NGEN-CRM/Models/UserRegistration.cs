@@ -12,5 +12,9 @@ namespace NGEN_CRM.Models
         public string RoleName { get; set; }
         public string Email { get; set; }
         public string Login_ID { get; set; }
+        public long Id { get; set; }
+        public bool isEdit { get; set; }
+        public string InitialUserLoginID { get; set; }
+        public List<UserRegistration> UserList { get; set; }
     }
 }

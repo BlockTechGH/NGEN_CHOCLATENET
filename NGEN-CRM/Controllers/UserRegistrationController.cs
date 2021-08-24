@@ -14,8 +14,42 @@ namespace NGEN_CRM.Controllers
         public ActionResult Create()
         {
             UserRegistration obj = new UserRegistration();
+            obj.UserList = UserRegistrationRepository.getAllUser();
             ViewBag.Roles = new SelectList(UserRegistrationRepository.getAllRole(), "RoleId", "Rolename");
             return View(obj);
+        }
+        public ActionResult Edit(long UserId) //Get data for Edit
+        {
+            UserRegistration obj = new UserRegistration();
+            obj = UserRegistrationRepository.getByID(UserId);
+            obj.UserList = UserRegistrationRepository.getAllUser();
+            ViewBag.Roles = new SelectList(UserRegistrationRepository.getAllRole(), "RoleId", "Rolename");
+            return View("Create", obj);
+        }
+        [HttpPost]
+        public ActionResult Edit(UserRegistration obj) //Update
+        {
+            //obj.RomStatusUser = Convert.ToInt64(Session["UsmID"].ToString());
+            if (UserRegistrationRepository.UpdateUser(obj) > 0) //Update success
+            {
+                return Content("<script language='javascript' type='text/javascript'>alert('Updated Successfully');window.location='/UserRegistration/Create'</script>");
+            }
+            return RedirectToAction("Create");
+        }
+        public ActionResult Delete(long UserID) //Delete
+        {
+            long Success = UserRegistrationRepository.DeleteUser(UserID);
+            if (Success == 0)
+            {//Delete not success
+                return Content("<script language='javascript' type='text/javascript'>alert('Reference Exist, Unable to delete');window.location='/UserRegistration/Create'</script>");
+                return RedirectToAction("Create");
+            }
+            else
+            {
+                return Content("<script language='javascript' type='text/javascript'>alert('Deleteted Succesfully');window.location='/UserRegistration/Create'</script>");
+                return RedirectToAction("Create");
+            }
+            return RedirectToAction("Create");
         }
         [HttpPost]
         public ActionResult Create(UserRegistration obj)
@@ -26,7 +60,7 @@ namespace NGEN_CRM.Controllers
                 {
                     //obj.LoginUserID = (Session["UsmID"].ToString());
                    
-                   int  t = UserRegistrationRepository.SaveUser(obj);
+                   long  t = UserRegistrationRepository.SaveUser(obj);
                     if (t > 0) //Save Success
                     {
                         string messege = "User Succesfully Registered";
@@ -45,25 +79,10 @@ namespace NGEN_CRM.Controllers
             }
             return RedirectToAction("Create");
         }
-        //public bool isUserCodeExist(string UserCode, string InitialUserCode)
-        //{
-        //    UserCode = CLSCommon.getCompanyPrefix(2) + UserCode;
-        //    if (UserCode == InitialUserCode)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        if (!CLSCommon.isCodeExist(UserCode, "UsmCode", "UsersMaster"))
-        //        {
-        //            return true; // Role Code is Available
-        //        }
-        //        return false;
-        //    }
-        //}
-        public bool isUserNameExist(string Username, string InitialUsername)
+      
+        public bool isUserNameExist(string Username, string InitialLoginId)
         {
-            if (Username == InitialUsername)
+            if (Username == InitialLoginId)
             {
                 return true;
             }

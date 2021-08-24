@@ -1,4 +1,4 @@
-﻿@model NGEN_CRM.Models.UserRegistration
+﻿@model NGEN_CRM.Models.Agent_Queue
 <link rel="stylesheet" href="../assets/css/lib/datatable/dataTables.bootstrap.min.css">
 <div class="breadcrumbs">
     <div class="breadcrumbs-inner">
@@ -6,7 +6,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>User Registration</h1>
+                        <h1>Agent_Queue Registration</h1>
                     </div>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                             <li><a href="#">Home</a></li>
-                            <li class="active">User Registration</li>
+                            <li class="active">Agent_Queue Registration</li>
                         </ol>
                     </div>
                 </div>
@@ -37,47 +37,44 @@
                                         <div class="col-lg-12">
 
                                             <div class="card-header">
-                                                <strong>Create User</strong>
+                                                <strong>Create Agent_Queue</strong>
                                             </div>
                                             <div class="card-body" style="float:none">
                                                 <div class="row form-group">
                                                     <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Name</label></div>
-                                                    <div class="col-12 col-md-9"><input id="hf-email" name="Name" value="@Model.Name" required class="form-control"></div>
+                                                    <div class="col-12 col-md-6"><input id="hf-email" name="Name" value="@Model.Name" required class="form-control"></div>
                                                     @Html.Hidden("isEdit", @Model.isEdit)
                                                     @Html.Hidden("Id", @Model.Id)
-                                                    @Html.Hidden("InitialUserLoginID",@Model.InitialUserLoginID)
+
                                                 </div>
                                                 <div class="row form-group">
                                                     <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Role</label></div>
-                                                    <div class="col-12 col-md-9">
-                                                        @Html.DropDownListFor(model => model.RoleName, (SelectList)ViewBag.Roles, "--Select--", new { @class = "form-control m-bot15", @required = true, @id = "RomID" })
+                                                    <div class="col-12 col-md-6">
+                                                        @Html.DropDownList("Type", new SelectList(ViewBag.Types, "Value", "Text"), "--Select--", new { @class = "form-control m-bot15", @required = true, @id = "RomID" })
+                                                        @*@Html.DropDownListFor(model => model.Type, (SelectList)ViewBag.Types, "--Select--", new { @class = "form-control m-bot15", @required = true, @id = "RomID" })*@
+
                                                     </div>
                                                 </div>
+
                                                 <div class="row form-group">
-                                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Email</label></div>
-                                                    <div class="col-12 col-md-9"><input type="email" id="hf-email" value="@Model.Email" name="Email" required class="form-control"></div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Login_ID</label></div>
-                                                    <div class="col-12 col-md-9"><input id="txtLoginId" name="Login_ID" value="@Model.Login_ID" class="form-control" required onkeydown="if (event.keyCode == 13) return false" onchange="CheckUsername()"></div>
-                                                    <span id="dis1" style="color: red; display: none; margin-left:242px">* LoginID already exist. Please try another</span>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <div class="col col-md-3"><label for="hf-password" class=" form-control-label">Password</label></div>
-                                                    <div class="col-12 col-md-9"><input type="password" id="hf-password" name="Password" value="@Model.Password" required class="form-control"></div>
+                                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Code</label></div>
+                                                    <div class="col-12 col-md-6"><input id="txtCode" name="Code" value="@Model.Code" class="form-control" required onkeydown="if (event.keyCode == 13) return false" onchange="CheckUsercode()"></div>
+                                                    <span id="dis1" style="color: red; display: none; margin-left:242px">* Code already exist. Please try another</span>
+
                                                 </div>
 
                                                 <div class="row form-group">
                                                     <div class="col col-md-10">
+
                                                         <button id="submit" type="reset" class="btn btn-default btn-sm" style="margin-right:6px;float:right" onclick="location.href='@Url.Action("Contact", "Home")'"> Cancel</button>
                                                         @if (@Model.isEdit)
                                                         {
-                                                            @Html.ActionLink("Delete", "Delete", new { UserID = @Model.Id }, new { onclick = "return confirm('Are you sure you want to delete this User?');", @class = "btn btn-danger btn-sm", @style = "float:right;margin-right:6px" })
+                                                            @Html.ActionLink("Delete", "Delete", new { AgentID = @Model.Id }, new { onclick = "return confirm('Are you sure you want to delete this Agent_Queue?');", @class = "btn btn-danger btn-sm", @style= "float:right;margin-right:6px" })
                                                         }
                                                         <button id="submit" type="submit" class="btn btn-primary btn-sm" style="margin-right:6px;float:right"> Submit</button>
                                                     </div>
+                                                    </div>
                                                 </div>
-                                            </div>
 
 
                                         </div>
@@ -98,22 +95,22 @@
                                         @*<table class="table table-striped table-advance table-hover" id="countTable">*@
                                         <thead>
                                             <tr>
-                                                <td><label for="exampleInputEmail1"><i>Id</i></label></td>
                                                 <td><label for="exampleInputEmail1"><i>Name</i></label></td>
+                                                @*<td><label for="exampleInputEmail1"><i>Code</i></label></td>*@
                                                 <td><label for="exampleInputEmail1"><i>Action</i></label></td>
                                             </tr>
                                         </thead>
-                                        @foreach (var item in Model.UserList)
+                                        @foreach (var item in Model.Agentlist)
                                         {
                                             <tr>
-                                                <td>@Html.DisplayFor(modelItem => item.Id)</td>
                                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                                @*<td>@Html.DisplayFor(modelItem => item.Code)</td>*@
                                                 <td>
                                                     <div class="btn-group" title="Edit">
-                                                        <a class="" href="/UserRegistration/Edit?UserId=@item.Id"><i class="fa fa-pencil-square-o"></i></a>
-
+                                                        <a class="" href="/Agent_QueueCreation/Edit?AgentID=@item.Id"><i class="fa fa-pencil-square-o"></i></a>
+                                                     
                                                     </div>
-
+                                                  
                                                 </td>
                                             </tr>
                                         }
@@ -161,13 +158,12 @@
     });
 </script>
 <script>
-    function CheckUsername() {
-      
-        var name = $("#txtLoginId").val(); //Value entered in the text box
-        var initial = $("#InitialUserLoginID").val();
+    function CheckUsercode() {
+
+        var name = $("#txtCode").val(); //Value entered in the text box
+
         //jQuery AJAX Post request
-         //$.post("/User/isUserCodeExist", { UserCode: Code, InitialUserCode: initialCode },
-        $.post("/UserRegistration/isUsernameExist", { Username: name, InitialLoginId:initial},
+        $.post("/Agent_QueueCreation/isCodeExist", { Chkcode: name },
             function (data) {
                 if (data == "True") {
                     $("#dis1").hide();
@@ -175,13 +171,10 @@
                 }
                 else {
                     $("#dis1").show();
-                    $("#txtLoginId").focus();
+                    $("#txtCode").focus();
                     $("#submit").prop("disabled", true);
                 }
             });
     }
 </script>
-
-
-
 

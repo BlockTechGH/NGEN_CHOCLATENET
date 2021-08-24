@@ -201,7 +201,7 @@ namespace NGEN_CRM.Models
             foreach (DataRow item in tblItems.Rows)
             {
                 obj = new Agent();
-                obj.AgentName =(item["final_Dispname"]).ToString();
+                obj.AgentName =(item["Name"]).ToString();
                 CLAgntlist.Add(obj);
             }
             return CLAgntlist;
@@ -215,7 +215,7 @@ namespace NGEN_CRM.Models
             foreach (DataRow item in tblItems.Rows)
             {
                 obj = new Agent();
-                obj.AgentName = (item["final_Dispname"]).ToString();
+                obj.AgentName = (item["Name"]).ToString();
                 CLAgntlist.Add(obj);
             }
             
@@ -237,7 +237,11 @@ namespace NGEN_CRM.Models
                 obj.InboundAns = item["Answered"].ToString();
                 obj.Missed = item["MISSED"].ToString(); 
                 obj.Inbound = item["INBOUND"].ToString();
-                obj.SLA =( (Convert.ToDecimal(obj.InboundAns)) / (Convert.ToDecimal(obj.Inbound))).ToString("0.00%");
+                if(obj.Inbound!="0")
+                {
+                    obj.SLA = ((Convert.ToDecimal(obj.InboundAns)) / (Convert.ToDecimal(obj.Inbound))).ToString("0.00%");
+
+                }
                 obj.Outbound = item["OUTBOUND"].ToString();
                 obj.Total = (Convert.ToInt32(obj.Inbound) + Convert.ToInt32(obj.Outbound)).ToString();
                 HomeList.Add(obj);

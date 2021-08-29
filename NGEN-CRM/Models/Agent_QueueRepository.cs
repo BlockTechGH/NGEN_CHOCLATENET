@@ -15,7 +15,7 @@ namespace NGEN_CRM.Models
             ParamList.Add(new DbParameterList("flag", "Insert", DbType.String));
             ParamList.Add(new DbParameterList("ID", 0, DbType.Int64));
             ParamList.Add(new DbParameterList("name", obj.Name, DbType.String));
-            ParamList.Add(new DbParameterList("code", obj.Code, DbType.String));
+            ParamList.Add(new DbParameterList("code","Ext."+ obj.Code, DbType.String));
             if(obj.Type=="Agent")
             {
                 obj.Type = "A";
@@ -43,7 +43,7 @@ namespace NGEN_CRM.Models
             ParamList.Add(new DbParameterList("id", obj.Id, DbType.Int32));
             ParamList.Add(new DbParameterList("flag", "Update", DbType.String));
             ParamList.Add(new DbParameterList("name", obj.Name, DbType.String));
-            ParamList.Add(new DbParameterList("code", obj.Code, DbType.String));
+            ParamList.Add(new DbParameterList("code", "Ext."+obj.Code, DbType.String));
             ParamList.Add(new DbParameterList("type", obj.Type, DbType.String));
             object s = DbController.ExecuteScalar("SP_AgentQueueCreation", ParamList);
             long isSuccess = Convert.ToInt64(s);
@@ -89,9 +89,15 @@ namespace NGEN_CRM.Models
                 obj.Id = Convert.ToInt32(item["Id"]);
                 obj.Name = item["Name"].ToString();
                 obj.Code = item["Code"].ToString();
+                if(obj.Code.Length>4)
+                {
+                    obj.InitialCode = obj.Code.Substring(4);
+                    obj.Code = obj.Code.Substring(4);
+                }
+                
                 obj.Type = item["Type"].ToString();
                 obj.isEdit = true;
-                obj.InitialCode = obj.Code;
+              
             }
 
             obj.Agentlist = getAllAgentQueue();
@@ -103,7 +109,7 @@ namespace NGEN_CRM.Models
             bool isSExist = false;
             List<DbParameterList> ParamList = new List<DbParameterList>();
             Agent_Queue obj = new Agent_Queue();
-            ParamList.Add(new DbParameterList("code", Code, DbType.String));
+            ParamList.Add(new DbParameterList("code", "Ext."+Code, DbType.String));
             ParamList.Add(new DbParameterList("flag", "Code", DbType.String));
             DataTable tblItems = DbController.ExecuteDataTable("SP_AgentQueueCreation", ParamList);
             if(tblItems.Rows.Count>0)

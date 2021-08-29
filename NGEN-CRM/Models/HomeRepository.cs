@@ -85,6 +85,39 @@ namespace NGEN_CRM.Models
             }
             return HomeList;
         }
+        public static List<Home> GetAgentqueueReport(Home Obj) //Get All Roles
+        {
+            List<Home> HomeList = new List<Home>();
+            Home obj;
+            List<DbParameterList> ParamList = new List<DbParameterList>();
+            ParamList.Add(new DbParameterList("FromDate", Obj.FromDate, DbType.Date));
+            ParamList.Add(new DbParameterList("ToDate", Obj.ToDate, DbType.Date));
+            DataTable tblItems = DbController.ExecuteDataTable("SP_GetAgentQCallSummary", ParamList);
+            foreach (DataRow item in tblItems.Rows)
+            {
+                obj = new Home();
+                obj.Inbound = item["INBOUND"].ToString();
+                obj.Agent = (item["Agent"]).ToString();
+                obj.Missed = item["QMissed"].ToString(); ;
+                obj.InboundAns = ((Convert.ToDecimal(obj.Inbound))- (Convert.ToDecimal(obj.Missed))).ToString();
+              
+            
+                obj.Outbound = item["OUTBOUND"].ToString();
+                if (obj.Inbound != "0")
+                {
+                    obj.SLA = ((Convert.ToDecimal(obj.InboundAns)) / (Convert.ToDecimal(obj.Inbound))).ToString("0.00%");
+                }
+                //obj.SLA = ((Convert.ToDecimal(obj.InboundAns)) / (Convert.ToDecimal(obj.Inbound))).ToString("0.00%");
+                int Total = Convert.ToInt32(obj.Inbound) + Convert.ToInt32(obj.Outbound);
+                obj.Total = Total.ToString();
+                if (obj.Agent != "")
+                {
+                    HomeList.Add(obj);
+
+                }
+            }
+            return HomeList;
+        }
         public static List<Home> GetAgentReport(Home Obj) //Get All Roles
         {
             List<Home> HomeList = new List<Home>();
@@ -235,7 +268,7 @@ namespace NGEN_CRM.Models
                 obj = new Home();
                
                 obj.InboundAns = item["Answered"].ToString();
-                obj.Missed = item["MISSED"].ToString(); 
+                obj.Missed =(( Convert.ToDecimal( item["QMISSED"])) + (Convert.ToDecimal(item["AgentMissed"]))).ToString();
                 obj.Inbound = item["INBOUND"].ToString();
                 if(obj.Inbound!="0")
                 {
@@ -255,7 +288,7 @@ namespace NGEN_CRM.Models
             List<DbParameterList> ParamList = new List<DbParameterList>();
             ParamList.Add(new DbParameterList("FromDate", Obj.FromDate, DbType.Date));
             ParamList.Add(new DbParameterList("ToDate", Obj.ToDate, DbType.Date));
-            DataTable tblItems = DbController.ExecuteDataTable("[SP_GetQCallDetailReport]", ParamList);
+            DataTable tblItems = DbController.ExecuteDataTable("[SP_GetCallDetailReport]", ParamList);
             foreach (DataRow item in tblItems.Rows)
             {
                 obj = new Home();
@@ -266,9 +299,15 @@ namespace NGEN_CRM.Models
                 obj.CallType = item["Call_Type"].ToString();
                 if (obj.CallType == "INBOUND")
                 {
-                    obj.QueueName = item["final_Dispname"].ToString();
-                    obj.Agent = "";
+                    obj.QueueName = item["QueName"].ToString();
+                    if(item["final_Type"].ToString()!="Queue")
+                    {
+                        obj.Agent = item["final_Dispname"].ToString();
+                    }
+                    else { obj.Agent = ""; }
+                    //obj.Agent = ""; 
                 }
+               
                 if (obj.CallType == "OUTBOUND")
                 {
                     obj.Agent = item["from_Dispname"].ToString();
@@ -321,10 +360,14 @@ namespace NGEN_CRM.Models
             {
                 obj = new Home();
                 obj.FinalType = item["final_Type"].ToString();
-                if (obj.FinalType == "Queue")
+                if (obj.FinalType != "")
                 {
-                    obj.QueueName = item["final_Dispname"].ToString();
-                    obj.Agent = "";
+                    obj.QueueName = item["QueName"].ToString();
+                    if (obj.FinalType != "Queue")
+                    {
+                        obj.Agent = item["final_Dispname"].ToString();
+
+                    }
                     obj.PhoneNo = item["from_No"].ToString();
                     obj.CallDate = item["Call_Date"].ToString();
                     obj.CallTime = item["Call_Time"].ToString();

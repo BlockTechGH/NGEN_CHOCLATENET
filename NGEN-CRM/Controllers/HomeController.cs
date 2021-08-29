@@ -23,7 +23,7 @@ namespace NGEN_CRM.Controllers
             Home obj = new Home();
             ViewBag.ShowDiv = false;
             ViewBag.Message = "Your contact page.";
-            obj.ToDate = DateTime.Now.AddDays(1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj.FromDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
@@ -44,30 +44,30 @@ namespace NGEN_CRM.Controllers
             DataTable dt = new DataTable();
             if(obj.Duration=="1")
             {
-                obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.ToDate = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
                 obj.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             }
             else if(obj.Duration == "2")
             {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-                obj.FromDate = DateTime.Now.AddDays(-7).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.FromDate = DateTime.Now.AddDays(-6).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
                
             }
             else if (obj.Duration == "3")
             {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-                obj.FromDate = DateTime.Now.AddDays(-15).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.FromDate = DateTime.Now.AddDays(-14).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
               
             }
             else if (obj.Duration == "4")
             {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-                obj.FromDate = DateTime.Now.AddDays(-30).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.FromDate = DateTime.Now.AddDays(-29).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
              
             }
             else
             {
-                obj.ToDate = Convert.ToDateTime(obj.ToDate).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.ToDate = Convert.ToDateTime(obj.ToDate).AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
                 obj.FromDate = Convert.ToDateTime(obj.FromDate).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
               
             }
@@ -83,19 +83,19 @@ namespace NGEN_CRM.Controllers
             obj.CallList = HomeRepository.GetAgentData(obj);
             //obj.QCallList = HomeRepository.GetAgentQReport(obj);
             obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
-            dt = HomeRepository.GetAgentQReportTable(obj);
+            //dt = HomeRepository.GetAgentQReportTable(obj);
 
-            List<object> iData = new List<object>();
-            foreach (DataColumn dc in dt.Columns)
-            {
-                List<object> x = new List<object>();
-                x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
-                iData.Add(x);
-            }
-            obj.Data = iData;
+            //List<object> iData = new List<object>();
+            //foreach (DataColumn dc in dt.Columns)
+            //{
+            //    List<object> x = new List<object>();
+            //    x = (from DataRow drr in dt.Rows select drr[dc.ColumnName]).ToList();
+            //    iData.Add(x);
+            //}
+            //obj.Data = iData;
 
-            string strserialize = JsonConvert.SerializeObject(obj.Data);
-            obj.PhoneNo = strserialize;
+            //string strserialize = JsonConvert.SerializeObject(obj.Data);
+            //obj.PhoneNo = strserialize;
             return View("contact",obj);
 
 

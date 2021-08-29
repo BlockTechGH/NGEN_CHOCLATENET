@@ -39,5 +39,6 @@ namespace NGEN_CRM.Models
         public string[] QueueIds { get; set; }
         public List<Agent> Agents { get; set; }
         public List<Agent> Queues { get; set; }
+        public string TotalCall { get;  set; }
     }
 }

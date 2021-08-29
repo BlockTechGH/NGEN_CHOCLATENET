@@ -42,30 +42,30 @@ namespace NGEN_CRM.Controllers
             DataTable dt = new DataTable();
             if (obj.Duration == "1")
             {
-                obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.ToDate = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
                 obj.FromDate = DateTime.Now.AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             }
             else if (obj.Duration == "2")
             {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-                obj.FromDate = DateTime.Now.AddDays(-7).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.FromDate = DateTime.Now.AddDays(-6).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
 
             }
             else if (obj.Duration == "3")
             {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-                obj.FromDate = DateTime.Now.AddDays(-15).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.FromDate = DateTime.Now.AddDays(-14).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
 
             }
             else if (obj.Duration == "4")
             {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
-                obj.FromDate = DateTime.Now.AddDays(-30).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.FromDate = DateTime.Now.AddDays(-29).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
 
             }
             else
             {
-                obj.ToDate = Convert.ToDateTime(obj.ToDate).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.ToDate = Convert.ToDateTime(obj.ToDate).AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
                 obj.FromDate = Convert.ToDateTime(obj.FromDate).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
 
             }
@@ -122,9 +122,10 @@ namespace NGEN_CRM.Controllers
             if (obj.Report == "4" )
             {
                
-                obj.CallList = HomeRepository.GetMissedCallReport(obj);
+                
                 if (selectedItems.Count != 0)
                 {
+                    obj.CallList = HomeRepository.GetMissedCallReport(obj);
                     obj.CallList = obj.CallList.Where(o => obj.AgentIds.Contains((string)(o.Agent))).ToList();
                 }
                 if (selectedQItems.Count != 0)
@@ -142,19 +143,28 @@ namespace NGEN_CRM.Controllers
             }
             if (obj.Report == "3")
             {
-                obj.CallList = HomeRepository.GetAgentReport(obj);
+                //obj.CallList = HomeRepository.GetAgentReport(obj);
                 if (selectedItems.Count != 0)
                 {
+                    obj.CallList = HomeRepository.GetAgentReport(obj);
                     obj.CallList = obj.CallList.Where(o => obj.AgentIds.Contains((string)(o.Agent))).ToList();
+                    obj.TotalCall = obj.CallList.Sum(item => Convert.ToInt64(item.Total)).ToString();
                 }
+              
+
             }
             if (obj.Report == "5")
             {
-                obj.QCallList = HomeRepository.GetAgentQReport(obj);
+                //obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
+
                 if (selectedQItems.Count != 0)
                 {
+                    obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
                     obj.QCallList = obj.QCallList.Where(o => obj.QueueIds.Contains((string)(o.Agent))).ToList();
+                    obj.TotalCall = obj.QCallList.Sum(item => Convert.ToInt64(item.QTotal)).ToString();
+                    //obj.QCallList = obj.QCallList.Where(o => obj.QueueIds.Contains((string)(o.Agent))).ToList();
                 }
+                
             }
             ViewBag.Agents = new MultiSelectList(HomeRepository.getAllAgent(), "AgentName", "AgentName", obj.AgentIds);
             ViewBag.Queue = new MultiSelectList(HomeRepository.getAllQueueName(), "AgentName", "AgentName", obj.QueueIds);
@@ -264,25 +274,44 @@ namespace NGEN_CRM.Controllers
                             
                     });
                 }
-            }
-            if(obj.QCallList!=null)
-            {
                 dt6.Columns.Add("QueueName", typeof(string));
-                dt6.Columns.Add("Inbound", typeof(string));
-                dt6.Columns.Add("Queue Missed ", typeof(string));
-                dt6.Columns.Add("Queue Answered", typeof(string));
+                dt6.Columns.Add("Inbound Answered", typeof(string));
+                dt6.Columns.Add("Inbound Missed", typeof(string));
+                dt6.Columns.Add("Total Inbound", typeof(string));
                 dt6.Columns.Add("SLA%", typeof(string));
-                foreach (var call in obj.QCallList)
+                //dt6.Columns.Add("Outbound", typeof(string));
+                dt6.Columns.Add("Total", typeof(string));
+                foreach (var call in obj.CallList)
                 {
                     dt6.Rows.Add(new Object[]{
                             call.Agent,
-                            call.QTotal,
-                            call.QMissed,
-                            call.QAns,
-                            call.QSLA
+                            call.InboundAns,
+                            call.Missed,
+                            call.Inbound,
+                            call.SLA,
+                          
+                            call.Total
                     });
                 }
             }
+            //if(obj.QCallList!=null)
+            //{
+            //    dt6.Columns.Add("QueueName", typeof(string));
+            //    dt6.Columns.Add("Inbound", typeof(string));
+            //    dt6.Columns.Add("Queue Missed ", typeof(string));
+            //    dt6.Columns.Add("Queue Answered", typeof(string));
+            //    dt6.Columns.Add("SLA%", typeof(string));
+            //    foreach (var call in obj.QCallList)
+            //    {
+            //        dt6.Rows.Add(new Object[]{
+            //                call.Agent,
+            //                call.QTotal,
+            //                call.QMissed,
+            //                call.QAns,
+            //                call.QSLA
+            //        });
+            //    }
+            //}
 
 
            

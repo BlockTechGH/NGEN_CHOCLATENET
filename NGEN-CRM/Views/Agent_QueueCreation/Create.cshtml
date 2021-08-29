@@ -27,7 +27,7 @@
     <div class="animated fadeIn">
         <div class="card">
             <div class="row">
-                <div class="col-lg-9" style="padding:30px">
+                <div class="col-lg-8" style="padding:30px">
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form">
@@ -45,6 +45,12 @@
                                                     <div class="col-12 col-md-6"><input id="hf-email" name="Name" value="@Model.Name" required class="form-control"></div>
                                                     @Html.Hidden("isEdit", @Model.isEdit)
                                                     @Html.Hidden("Id", @Model.Id)
+                                                    @Html.Hidden("InitialCode", @Model.InitialCode)
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Number</label></div>
+                                                    <div class="col-12 col-md-6"><input id="txtCode" type="number" name="Code" value="@Model.Code" class="form-control" required onkeydown="if (event.keyCode == 13) return false" onchange="CheckUsercode()"></div>
+                                                    <span id="dis1" style="color: red; display: none; margin-left:242px">* Code already exist. Please try another</span>
 
                                                 </div>
                                                 <div class="row form-group">
@@ -56,25 +62,20 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="row form-group">
-                                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Code</label></div>
-                                                    <div class="col-12 col-md-6"><input id="txtCode" name="Code" value="@Model.Code" class="form-control" required onkeydown="if (event.keyCode == 13) return false" onchange="CheckUsercode()"></div>
-                                                    <span id="dis1" style="color: red; display: none; margin-left:242px">* Code already exist. Please try another</span>
 
-                                                </div>
 
                                                 <div class="row form-group">
                                                     <div class="col col-md-10">
 
-                                                        <button id="submit" type="reset" class="btn btn-default btn-sm" style="margin-right:6px;float:right" onclick="location.href='@Url.Action("Contact", "Home")'"> Cancel</button>
+                                                        <button id="submit1" type="reset" class="btn btn-default btn-sm" style="margin-right:6px;float:right" onclick="location.href='@Url.Action("Contact", "Home")'"> Cancel</button>
                                                         @if (@Model.isEdit)
                                                         {
-                                                            @Html.ActionLink("Delete", "Delete", new { AgentID = @Model.Id }, new { onclick = "return confirm('Are you sure you want to delete this Agent_Queue?');", @class = "btn btn-danger btn-sm", @style= "float:right;margin-right:6px" })
+                                                            @Html.ActionLink("Delete", "Delete", new { AgentID = @Model.Id }, new { onclick = "return confirm('Are you sure you want to delete this Agent_Queue?');", @class = "btn btn-danger btn-sm", @style = "float:right;margin-right:6px" })
                                                         }
                                                         <button id="submit" type="submit" class="btn btn-primary btn-sm" style="margin-right:6px;float:right"> Submit</button>
                                                     </div>
-                                                    </div>
                                                 </div>
+                                            </div>
 
 
                                         </div>
@@ -86,7 +87,7 @@
                         </div>
                     </section>
                 </div>
-                <div class="col-lg-3" style="padding:30px">
+                <div class="col-lg-4" style="padding:30px">
                     <section class="panel">
                         <div class="panel-body">
                             <form role="form">
@@ -96,7 +97,7 @@
                                         <thead>
                                             <tr>
                                                 <td><label for="exampleInputEmail1"><i>Name</i></label></td>
-                                                @*<td><label for="exampleInputEmail1"><i>Code</i></label></td>*@
+                                                <td><label for="exampleInputEmail1"><i>Code</i></label></td>
                                                 <td><label for="exampleInputEmail1"><i>Action</i></label></td>
                                             </tr>
                                         </thead>
@@ -104,7 +105,7 @@
                                         {
                                             <tr>
                                                 <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                                @*<td>@Html.DisplayFor(modelItem => item.Code)</td>*@
+                                                <td>@Html.DisplayFor(modelItem => item.Code)</td>
                                                 <td>
                                                     <div class="btn-group" title="Edit">
                                                         <a class="" href="/Agent_QueueCreation/Edit?AgentID=@item.Id"><i class="fa fa-pencil-square-o"></i></a>
@@ -161,9 +162,9 @@
     function CheckUsercode() {
 
         var name = $("#txtCode").val(); //Value entered in the text box
-
+        var initial = $("#InitialCode").val();
         //jQuery AJAX Post request
-        $.post("/Agent_QueueCreation/isCodeExist", { Chkcode: name },
+        $.post("/Agent_QueueCreation/isCodeExist", { Chkcode: name, InitialCode: initial },
             function (data) {
                 if (data == "True") {
                     $("#dis1").hide();

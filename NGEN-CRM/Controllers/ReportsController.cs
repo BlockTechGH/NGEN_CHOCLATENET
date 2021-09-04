@@ -162,11 +162,18 @@ namespace NGEN_CRM.Controllers
                     obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
                     obj.QCallList = obj.QCallList.Where(o => obj.QueueIds.Contains((string)(o.Agent))).ToList();
                     obj.TotalCall = obj.QCallList.Sum(item => Convert.ToInt64(item.QTotal)).ToString();
+
+                    string totalAnswe= obj.QCallList.Sum(item => Convert.ToInt64(item.QAns)).ToString();
+                    if (obj.TotalCall != "0")
+                    {
+                        obj.TotalSLA = ((Convert.ToDecimal(totalAnswe)) / (Convert.ToDecimal(obj.TotalCall))).ToString("0.00%");
+                    }
+                    //obj.TotalSLA= obj.QCallList.Average(item => Convert.ToDecimal(item.QSLA.Replace(@"%", ""))).ToString();                    
                     //obj.QCallList = obj.QCallList.Where(o => obj.QueueIds.Contains((string)(o.Agent))).ToList();
                 }
-                
+              
             }
-            ViewBag.Agents = new MultiSelectList(HomeRepository.getAllAgent(), "AgentName", "AgentName", obj.AgentIds);
+            //ViewBag.Agents = new MultiSelectList(HomeRepository.getAllAgent(), "AgentName", "AgentName", obj.AgentIds);
             ViewBag.Queue = new MultiSelectList(HomeRepository.getAllQueueName(), "AgentName", "AgentName", obj.QueueIds);
 
 
@@ -191,15 +198,17 @@ namespace NGEN_CRM.Controllers
              
                 dt2.Columns.Add("Inbound Answered", typeof(string));
                 dt2.Columns.Add("Inbound Missed ", typeof(string));
+                dt2.Columns.Add("IVR Missed ", typeof(string));
                 dt2.Columns.Add("Total Inbound", typeof(string));
                 dt2.Columns.Add("SLA% ", typeof(string));
                 dt2.Columns.Add("Outbound", typeof(string));
-                dt2.Columns.Add("Total% ", typeof(string));
+                dt2.Columns.Add("Total ", typeof(string));
                 foreach (var call in obj.CallList)
                 {
                     dt2.Rows.Add(new Object[]{
                             call.InboundAns,
                             call.Missed,
+                            call.IMissed,
                             call.Inbound,
                             call.SLA,
                             call.Outbound,
@@ -274,44 +283,26 @@ namespace NGEN_CRM.Controllers
                             
                     });
                 }
+                
+            }
+            if(obj.QCallList!=null)
+            {
                 dt6.Columns.Add("QueueName", typeof(string));
-                dt6.Columns.Add("Inbound Answered", typeof(string));
-                dt6.Columns.Add("Inbound Missed", typeof(string));
-                dt6.Columns.Add("Total Inbound", typeof(string));
+                dt6.Columns.Add("Inbound", typeof(string));
+                dt6.Columns.Add("Queue Missed ", typeof(string));
+                dt6.Columns.Add("Queue Answered", typeof(string));
                 dt6.Columns.Add("SLA%", typeof(string));
-                //dt6.Columns.Add("Outbound", typeof(string));
-                dt6.Columns.Add("Total", typeof(string));
-                foreach (var call in obj.CallList)
+                foreach (var call in obj.QCallList)
                 {
                     dt6.Rows.Add(new Object[]{
                             call.Agent,
-                            call.InboundAns,
-                            call.Missed,
-                            call.Inbound,
-                            call.SLA,
-                          
-                            call.Total
+                            call.QTotal,
+                            call.QMissed,
+                            call.QAns,
+                            call.QSLA
                     });
                 }
             }
-            //if(obj.QCallList!=null)
-            //{
-            //    dt6.Columns.Add("QueueName", typeof(string));
-            //    dt6.Columns.Add("Inbound", typeof(string));
-            //    dt6.Columns.Add("Queue Missed ", typeof(string));
-            //    dt6.Columns.Add("Queue Answered", typeof(string));
-            //    dt6.Columns.Add("SLA%", typeof(string));
-            //    foreach (var call in obj.QCallList)
-            //    {
-            //        dt6.Rows.Add(new Object[]{
-            //                call.Agent,
-            //                call.QTotal,
-            //                call.QMissed,
-            //                call.QAns,
-            //                call.QSLA
-            //        });
-            //    }
-            //}
 
 
            

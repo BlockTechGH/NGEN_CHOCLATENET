@@ -251,8 +251,9 @@ namespace NGEN_CRM.Models
                 obj.AgentName = (item["Name"]).ToString();
                 CLAgntlist.Add(obj);
             }
-            
-            obj.AgentName = "IVR MissedCall";
+            Agent obj1 = new Agent();
+            obj1.AgentName = "IVR MissedCall";
+            CLAgntlist.Add(obj1);
             return CLAgntlist;
         }
         public static List<Home> GetCallSummaryReport(Home Obj) //Get All Roles
@@ -270,9 +271,11 @@ namespace NGEN_CRM.Models
                 obj.InboundAns = item["Answered"].ToString();
                 obj.Missed =(( Convert.ToDecimal( item["QMISSED"])) + (Convert.ToDecimal(item["AgentMissed"]))).ToString();
                 obj.Inbound = item["INBOUND"].ToString();
+                
+                obj.IMissed = item["IMissed"].ToString();
                 if(obj.Inbound!="0")
                 {
-                    obj.SLA = ((Convert.ToDecimal(obj.InboundAns)) / (Convert.ToDecimal(obj.Inbound))).ToString("0.00%");
+                    obj.SLA = ((Convert.ToDecimal(obj.InboundAns)) / (Convert.ToDecimal(obj.Inbound)-(Convert.ToDecimal(obj.IMissed)))).ToString("0.00%");
 
                 }
                 obj.Outbound = item["OUTBOUND"].ToString();

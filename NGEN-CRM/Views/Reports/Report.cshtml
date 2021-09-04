@@ -137,6 +137,7 @@
                                             <tr>
                                                 <th>Inbound Answered</th>
                                                 <th>Inbound Missed </th>
+                                                <th>IVR Missed </th>
                                                 <th>Total Inbound</th>
                                                 <th>SLA%</th>
                                                 <th>Outbound</th>
@@ -148,15 +149,16 @@
                                             {
                                                 foreach (var item in Model.CallList)
                                                 {
-                                                    <tr>
+                                            <tr>
 
-                                                        <td>@Html.DisplayFor(modelItem => item.InboundAns)</td>
-                                                        <td> @Html.DisplayFor(modelItem => item.Missed)</td>
-                                                        <td> @Html.DisplayFor(modelItem => item.Inbound)</td>
-                                                        <td>@Html.DisplayFor(modelItem => item.SLA)</td>
-                                                        <td> @Html.DisplayFor(modelItem => item.Outbound)</td>
-                                                        <td> @Html.DisplayFor(modelItem => item.Total)</td>
-                                                    </tr>
+                                                <td>@Html.DisplayFor(modelItem => item.InboundAns)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.Missed)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.IMissed)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.Inbound)</td>
+                                                <td>@Html.DisplayFor(modelItem => item.SLA)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.Outbound)</td>
+                                                <td> @Html.DisplayFor(modelItem => item.Total)</td>
+                                            </tr>
                                                 }
                                             }
 
@@ -298,7 +300,7 @@
                             <div class="card-header">
                                 <strong>AGENT CALLS</strong>
                                 @if (@Model.CallList != null)
-                                {<strong><span class="count"> -@Model.TotalCall </span> </strong>}
+                                {<strong><span class="count"> -@Model.TotalCall  </span>  </strong> }
                                 <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="btncsv4" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv4()">CSV</button>&nbsp;
                                 <button type="submit" id="btnPDF4" name="btn" value="PDF3" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
@@ -358,7 +360,7 @@
                             <div class="card-header">
                                 <strong>QUEUE CALLS</strong>
                                 @if (@Model.QCallList != null)
-                                {<strong><span class="count"> -@Model.TotalCall </span> </strong>}
+                                {<strong><span class="count"> -@Model.TotalCall </span> <span> ;SLA= @Model.TotalSLA</span></strong>}
                                 <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="btncsv5" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv5()">CSV</button>&nbsp;
                                 <button type="submit" id="btnPDF5" name="btn" value="PDF4" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
@@ -418,7 +420,7 @@
                                 {<strong><span class="count"> -@Model.CallList.Count </span> </strong>}
                                 <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="btncsv6" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv6()">CSV</button>&nbsp;
-                                <button type="submit" id="btnPDF2" name="btn" value="PDF5" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                                <button type="submit" id="btnPDF6" name="btn" value="PDF5" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
                                 <button type="submit" value="Excel5" id="btnSubmit" name="btn" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;
                             </div>
 
@@ -605,21 +607,12 @@
             });
         });
 
-        //$(function () {
-        //    $('#ddlAgent').multiselect({
-        //        includeSelectAllOption: true
-        //    });
-        //});
-
-        //$(function () {
-        //    $('#ddlQueue').multiselect({
-        //        includeSelectAllOption: true
-        //    });
-        //});
+       
 
         $(function () {
            
-                var arNames5 = $('#ddlQueue').val()
+            var arNames5 = $('#ddlQueue').val()
+            //alert(arNames5)
                 if (arNames5 != null) {
                 if (arNames5 == "IVR MissedCall")
                 {
@@ -630,11 +623,11 @@
                     $("#DivAgent").hide();
                     $("#DivQueue").hide();
                 }
-                $("#ddlAgent").multiselect("disable");
+                //$("#ddlAgent").multiselect("disable");
                    
                 } else {
 
-                    $("#ddlAgent").multiselect("enable");
+                    //$("#ddlAgent").multiselect("enable");
 
                 }
            
@@ -649,6 +642,7 @@
         }
 
         if (reportName == "1") {
+          
             $("#DivSummary").show();
             document.getElementById("ddlDirection").disabled = true;
             $("#ddlAgent").multiselect("disable");
@@ -698,6 +692,7 @@
     });
     $(function () {
         $("#btnPDF4").click(function () {
+           
             $("input[name='GridHtml']").val($("#DivAgent").html());
         });
     });

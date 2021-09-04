@@ -40,5 +40,6 @@ namespace NGEN_CRM.Models
         public List<Agent> Agents { get; set; }
         public List<Agent> Queues { get; set; }
         public string TotalCall { get;  set; }
+        public string TotalSLA { get; set; }
     }
 }

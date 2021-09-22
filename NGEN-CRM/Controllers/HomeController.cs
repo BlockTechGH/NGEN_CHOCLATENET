@@ -194,7 +194,7 @@ namespace NGEN_CRM.Controllers
                             call.QueueName
                     });
                 }
-                ExportToPdf(dt3, "Total Call Details");
+                ExportToPdf(dt3, "Total Call");
                 return View("contact", obj);
             }
             else { return View("contact", obj); }

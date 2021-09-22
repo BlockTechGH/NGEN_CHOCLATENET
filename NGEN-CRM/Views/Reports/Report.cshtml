@@ -58,10 +58,10 @@
                                                    {
                                                       new SelectListItem() { Text = "Please select", Value = ""} ,
                                                       new SelectListItem() { Text = "Yesterday", Value = "1"} ,
-                                                      new SelectListItem() { Text = "Last7Days", Value = "2"},
-                                                      new SelectListItem() { Text = "Last15Days", Value = "3"},
-                                                      new SelectListItem() { Text = "Last30Days", Value = "4"},
-                                                      new SelectListItem() { Text = "CustomRange", Value = "5"},
+                                                      new SelectListItem() { Text = "Last 7 Days", Value = "2"},
+                                                      new SelectListItem() { Text = "Last 15 Days", Value = "3"},
+                                                      new SelectListItem() { Text = "Last 30 Days", Value = "4"},
+                                                      new SelectListItem() { Text = "Custom Range", Value = "5"},
                                                    }, new { @id = "ddlDuration", @class = "form-control", @required = true })
 
                                     </div>
@@ -137,7 +137,6 @@
                                             <tr>
                                                 <th>Inbound Answered</th>
                                                 <th>Inbound Missed </th>
-                                                <th>IVR Missed </th>
                                                 <th>Total Inbound</th>
                                                 <th>SLA%</th>
                                                 <th>Outbound</th>
@@ -153,7 +152,6 @@
 
                                                 <td>@Html.DisplayFor(modelItem => item.InboundAns)</td>
                                                 <td> @Html.DisplayFor(modelItem => item.Missed)</td>
-                                                <td> @Html.DisplayFor(modelItem => item.IMissed)</td>
                                                 <td> @Html.DisplayFor(modelItem => item.Inbound)</td>
                                                 <td>@Html.DisplayFor(modelItem => item.SLA)</td>
                                                 <td> @Html.DisplayFor(modelItem => item.Outbound)</td>
@@ -563,6 +561,8 @@
                 $("#DivAgent").hide();
                 $("#DivQueue").hide();
                 $("#ddlDirection").val("1");
+
+                document.getElementById("ddlDirection").disabled = true;
                 $("#ddlAgent").multiselect("enable");
                 $("#ddlQueue").multiselect("enable");
                 $("#DivIVRMissed").hide();

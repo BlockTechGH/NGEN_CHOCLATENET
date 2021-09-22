@@ -136,7 +136,7 @@ namespace NGEN_CRM.Controllers
                     }
                     else
                     {
-                        obj.CallList = HomeRepository.GetQMissedCallReport(obj).Where(o => obj.QueueIds.Contains((string)(o.QueueName))).ToList();
+                        obj.CallList = HomeRepository.GetMissedCallReport(obj).Where(o => obj.QueueIds.Contains((string)(o.QueueName))).ToList();
 
                     }
                 }
@@ -198,7 +198,7 @@ namespace NGEN_CRM.Controllers
              
                 dt2.Columns.Add("Inbound Answered", typeof(string));
                 dt2.Columns.Add("Inbound Missed ", typeof(string));
-                dt2.Columns.Add("IVR Missed ", typeof(string));
+               
                 dt2.Columns.Add("Total Inbound", typeof(string));
                 dt2.Columns.Add("SLA% ", typeof(string));
                 dt2.Columns.Add("Outbound", typeof(string));
@@ -208,7 +208,7 @@ namespace NGEN_CRM.Controllers
                     dt2.Rows.Add(new Object[]{
                             call.InboundAns,
                             call.Missed,
-                            call.IMissed,
+                          
                             call.Inbound,
                             call.SLA,
                             call.Outbound,

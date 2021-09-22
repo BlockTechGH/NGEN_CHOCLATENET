@@ -16,7 +16,7 @@ namespace NGEN_CRM.Models
             ParamList.Add(new DbParameterList("ID", 0, DbType.Int64));
             ParamList.Add(new DbParameterList("name", obj.Name, DbType.String));
             ParamList.Add(new DbParameterList("code","Ext."+ obj.Code, DbType.String));
-            if(obj.Type=="Agent")
+            if(obj.Type=="A")
             {
                 obj.Type = "A";
             }

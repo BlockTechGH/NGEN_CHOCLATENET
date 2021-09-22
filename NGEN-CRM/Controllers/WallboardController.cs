@@ -17,18 +17,28 @@ namespace NGEN_CRM.Controllers
             Home obj = new Home();
             obj.ToDate = DateTime.Now.AddDays(1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj.FromDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            //obj.ToDate = DateTime.Now.AddDays(-11).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            //obj.FromDate = DateTime.Now.AddDays(-12).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
             obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
-            DataTable dtQSummary = HomeRepository.GetAgentQReportTable(obj);
-            DataTable dtAgent = HomeRepository.GetAgentTable(obj);
+            double Avg = obj.QCallList.Where(item => item.QSLA != "0").Average(item => Convert.ToDouble(item.QSLA.ToString().Replace(@"%", "")));
+            Avg = Math.Round(Avg, 1);
+            int TotalMissed = Convert.ToInt32(obj.Missed);
             int TotalINBOUND = Convert.ToInt32(obj.Inbound);
             int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
-            int TotalMissed = Convert.ToInt32(obj.Missed);
+            obj.InboundAns = (Convert.ToInt32(obj.Inbound) - Convert.ToInt32(obj.Missed)).ToString();
             int Total = TotalINBOUND + TotalOUTBOUND;
             ViewBag.Missed = TotalMissed;
-            ViewBag.Inbound = TotalINBOUND;
+            ViewBag.Inbound = obj.InboundAns;
             ViewBag.Outbound = TotalOUTBOUND;
+            if(TotalINBOUND!=0)
+            {
+                //string SLA = (Convert.ToDecimal(obj.InboundAns) / (Convert.ToDecimal(TotalINBOUND))).ToString("0.0%");
+                string SLA = Avg.ToString();
+                ViewBag.SLA = SLA.Replace(@"%", "");
+            }
+            else { ViewBag.SLA = "0"; }
             ViewBag.Total = Total;
             return PartialView("IndexPa", obj);
         }
@@ -40,22 +50,29 @@ namespace NGEN_CRM.Controllers
             ViewBag.Message = "Your contact page.";
             obj.ToDate = DateTime.Now.AddDays(1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj.FromDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            //obj.ToDate = DateTime.Now.AddDays(-11).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+            //obj.FromDate = DateTime.Now.AddDays(-12).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
             obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
-            DataTable dtQSummary = HomeRepository.GetAgentQReportTable(obj);
-            DataTable dtAgent = HomeRepository.GetAgentTable(obj);
-
-            //obj.Qstring = GetChartString(dtQSummary);
-            //obj.Agentstring = GetChartString(dtAgent);
-            //ViewBag.Agentstring = obj.Agentstring;
+            double Avg = obj.QCallList.Where(item => item.QSLA != "0").Average(item => Convert.ToDouble(item.QSLA.ToString().Replace(@"%", "")));
+            Avg=Math.Round(Avg, 1);
             int TotalINBOUND = Convert.ToInt32(obj.Inbound);
             int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
             int TotalMissed = Convert.ToInt32(obj.Missed);
+            obj.InboundAns = (Convert.ToInt32(obj.Inbound) - Convert.ToInt32(obj.Missed)).ToString();
             int Total = TotalINBOUND + TotalOUTBOUND;
             ViewBag.Missed = TotalMissed;
-            ViewBag.Inbound = TotalINBOUND;
+            ViewBag.Inbound = obj.InboundAns;
             ViewBag.Outbound = TotalOUTBOUND;
+            string SLA = "0";
+            if (TotalINBOUND !=0)
+            {
+                //SLA = (Convert.ToDecimal(obj.InboundAns) / (Convert.ToDecimal(TotalINBOUND))).ToString("0.0%");
+                SLA = Avg.ToString();
+                ViewBag.SLA = SLA.Replace(@"%", "");
+            }
+            else { ViewBag.SLA = "0"; }
             ViewBag.Total = Total;
             return View(obj);
         }

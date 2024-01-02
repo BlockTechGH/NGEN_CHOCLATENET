@@ -5,17 +5,40 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Dapper;
+using System.Data.SqlClient;
 
 namespace NGEN_CRM.Controllers
 {
     public class UserRegistrationController : Controller
     {
+        private Connection sqlConnectionString = new Connection();
+        CLSCommen cLSCommen = new CLSCommen();
+
         // GET: UserRegistration
         public ActionResult Create()
         {
             UserRegistration obj = new UserRegistration();
             obj.UserList = UserRegistrationRepository.getAllUser();
             ViewBag.Roles = new SelectList(UserRegistrationRepository.getAllRole(), "RoleId", "Rolename");
+            obj.MenuId = new List<string>();
+            using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            {
+                conn.Open();
+                ViewBag.Menu = conn.Query<SideMenuNgen>("select MenuID,MenuName from SideMenuNgen").ToList();
+                conn.Close();
+            }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
         }
         public ActionResult Edit(long UserId) //Get data for Edit
@@ -24,16 +47,67 @@ namespace NGEN_CRM.Controllers
             obj = UserRegistrationRepository.getByID(UserId);
             obj.UserList = UserRegistrationRepository.getAllUser();
             ViewBag.Roles = new SelectList(UserRegistrationRepository.getAllRole(), "RoleId", "Rolename");
+
+            if(obj.MenuIds != null)
+            {
+                obj.MenuId = new List<string>();
+                obj.MenuId.AddRange(obj.MenuIds.Split(',').ToList());
+            }
+            
+            using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            {
+                conn.Open();
+                ViewBag.Menu = conn.Query<SideMenuNgen>("select MenuID,MenuName from SideMenuNgen").ToList();
+                conn.Close();
+            }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View("Create", obj);
         }
         [HttpPost]
-        public ActionResult Edit(UserRegistration obj) //Update
+        public ActionResult Edit(UserRegistration obj, FormCollection form) //Update
         {
             //obj.RomStatusUser = Convert.ToInt64(Session["UsmID"].ToString());
+
+            // Retrieve the selected checkbox values
+            var MenuIds = form.GetValues("Menu");
+
+            foreach (var MenuId in MenuIds)
+            {
+                if (obj.MenuIds == null)
+                {
+                    obj.MenuIds = MenuId;
+                }
+                else
+                {
+                    obj.MenuIds = obj.MenuIds + "," + MenuId;
+                }
+            }
+
             if (UserRegistrationRepository.UpdateUser(obj) > 0) //Update success
             {
                 return Content("<script language='javascript' type='text/javascript'>alert('Updated Successfully');window.location='/UserRegistration/Create'</script>");
             }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return RedirectToAction("Create");
         }
         public ActionResult Delete(long UserID) //Delete
@@ -49,18 +123,45 @@ namespace NGEN_CRM.Controllers
                 return Content("<script language='javascript' type='text/javascript'>alert('Deleteted Succesfully');window.location='/UserRegistration/Create'</script>");
                 return RedirectToAction("Create");
             }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return RedirectToAction("Create");
         }
         [HttpPost]
-        public ActionResult Create(UserRegistration obj)
+        public ActionResult Create(UserRegistration obj, FormCollection form)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     //obj.LoginUserID = (Session["UsmID"].ToString());
-                   
-                   long  t = UserRegistrationRepository.SaveUser(obj);
+
+                    // Retrieve the selected checkbox values
+                    var MenuIds = form.GetValues("Menu");
+                    
+                    foreach (var MenuId in MenuIds)
+                    {
+                        if(obj.MenuIds==null)
+                        {
+                            obj.MenuIds = MenuId;
+                        }
+                        else
+                        {
+                            obj.MenuIds = obj.MenuIds + "," + MenuId;
+                        }
+                    }
+                    
+                    
+                    long t = UserRegistrationRepository.SaveUser(obj);
                     if (t > 0) //Save Success
                     {
                         string messege = "User Succesfully Registered";
@@ -77,6 +178,17 @@ namespace NGEN_CRM.Controllers
                     throw ex;
                     return RedirectToAction("Error404", "Home"); } //If Error
             }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return RedirectToAction("Create");
         }
       

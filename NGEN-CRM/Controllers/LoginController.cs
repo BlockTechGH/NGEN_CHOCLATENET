@@ -1,6 +1,8 @@
-﻿using NGEN_CRM.Models;
+﻿using Dapper;
+using NGEN_CRM.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +11,8 @@ namespace NGEN_CRM.Controllers
 {
     public class LoginController : Controller
     {
+        private Connection sqlConnectionString = new Connection();
+
         // GET: Login
         public ActionResult Login()
         {
@@ -26,7 +30,11 @@ namespace NGEN_CRM.Controllers
                 Session["Usmname"] = obj1.Usmname;
                 Session["RomID"] = obj1.RomID;
                 Session["CpmIDPtr"] = obj.UnitId;
-                return RedirectToAction("Contact", "Home");
+
+                TempData["Msg"] = "Success";
+
+                return View();
+                //return RedirectToAction("Contact", "Home");
             }
             return Content("<script language='javascript' type='text/javascript'>alert('" + msg + "');window.location='/Login/Login'</script>");
         }
@@ -46,7 +54,8 @@ namespace NGEN_CRM.Controllers
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             Response.Cache.SetNoStore();
-            return RedirectToAction("Logout", "Logout");
+            //return RedirectToAction("Logout", "Logout");
+            return RedirectToAction("Login", "Login");
         }
     }
 }

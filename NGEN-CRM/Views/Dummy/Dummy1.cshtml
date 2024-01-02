@@ -1,0 +1,136 @@
+﻿@model NGEN_CRM.Models.QueueOwner
+
+<div class="breadcrumbs">
+    <div class="breadcrumbs-inner">
+        <div class="row m-0">
+            <div class="col-sm-4">
+                <div class="page-header float-left">
+                    <div class="page-title">
+                        <h1>Queue Owner Registration</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="page-header float-right">
+                    <div class="page-title">
+                        <ol class="breadcrumb text-right">
+                            <li><a href="#">Home</a></li>
+                            <li class="active">Queue Owner Registration</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Create" method="post">
+            <div class="card">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Create Queue Owner</strong>
+                            </div>
+                            <div class="card-body" style="float:none">
+                                <div class="row form-group">
+                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Name</label></div>
+                                    <div class="col-12 col-md-9">
+                                        @Html.DropDownListFor(m => m.AgentIds, (SelectList)ViewBag.Agents, "--Select--", new { @class = "form-control m-bot15", @required = true, @id = "ddlAgent" })
+                                    </div>
+                                                    
+                                    @*@Html.Hidden("isEdit", @Model.isEdit)
+                                    @Html.Hidden("Id", @Model.Id)
+                                    @Html.Hidden("InitialCode", @Model.InitialCode)*@
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Extension No</label></div>
+                                    <div class="col-12 col-md-9"><input type="text" id="extensionno" value="@Model.ExtensionNo" required class="form-control"></div>
+                                    @*<div class="col-12 col-md-6"><input id="txtCode" type="number" name="Code" value="@Model.Code" class="form-control" required onkeydown="if (event.keyCode == 13) return false" onchange="CheckUsercode()"></div>*@
+                                    <span id="dis1" style="color: red; display: none; margin-left:242px">* Code already exist. Please try another</span>
+
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Queue</label></div>
+                                    @*<div class="col-12 col-md-9">@Html.ListBoxFor(m => m.QueueIds, (MultiSelectList)ViewBag.Queue, new { @class = "listbox", @id = "ddlQueue" })</div>*@
+                                    <div class="input-group col-md-2">
+
+                                         @*@Html.DropDownList("QueueIds", (MultiSelectList)ViewBag.Queue, new { multiple = "multiple", @id = "ddlQueue" })*@
+                                        @Html.ListBoxFor(m => m.QueueIds, (MultiSelectList)ViewBag.Queue, new { @class = "listbox", @id = "ddlQueue" })
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row form-group">
+                                    <div class="col col-md-10">
+
+                                        <button id="submit1" type="reset" class="btn btn-default btn-sm" style="margin-right:6px;float:right" onclick="location.href='@Url.Action("Contact", "Home")'"> Cancel</button>
+                                        @*@if (@Model.isEdit)
+                                        {
+                                            @Html.ActionLink("Delete", "Delete", new { AgentID = @Model.Id }, new { onclick = "return confirm('Are you sure you want to delete this Agent_Queue?');", @class = "btn btn-danger btn-sm", @style = "float:right;margin-right:6px" })
+                                        }*@
+                                        <button id="submit" type="submit" class="btn btn-primary btn-sm" style="margin-right:6px;float:right"> Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--<div class="card-body card-block">
+                                
+
+
+                                <div class="row form-group">
+                                    <div class="col col-md-1"><label for="email-input" class=" form-control-label">Queue</label></div>
+                                    <div class="input-group col-md-2">-->
+
+                                         @*@Html.DropDownList("QueueIds", (MultiSelectList)ViewBag.Queue, new { multiple = "multiple", @id = "ddlQueue" })*@
+                                        <!--@Html.ListBoxFor(m => m.QueueIds, (MultiSelectList)ViewBag.Queue, new { @class = "listbox", @id = "ddlQueue" })
+
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <input type="hidden" name="GridHtml" />
+                                            <button type="submit" class="btn btn-primary btn-sm" style="line-height:1.95">Submit</button>
+                                            <button type="reset" class="btn btn-default btn-sm">Cancel</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>-->
+                        </div>
+                        <hr />
+
+                    </div>
+                </div>
+            </div>
+            <!-- /Widgets -->
+            <div class="clearfix"></div>
+            <!-- Call Summary -->
+            
+
+
+        </form>
+    </div>
+</div><!-- .animated -->
+
+<div class="clearfix"></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script src="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('.listbox').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+        
+    })
+</script>
+
+

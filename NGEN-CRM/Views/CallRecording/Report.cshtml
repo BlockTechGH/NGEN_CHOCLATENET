@@ -1,0 +1,452 @@
+﻿@model NGEN_CRM.Models.CallRecordingDetails
+
+<div class="content">
+    <div class="animated fadeIn">
+        <form class="form-validate form-horizontal" action="Create" method="post">
+            <div class="card">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>CALL RECORDING REPORT</strong>
+                            </div>
+                            <div class="card-body card-block">
+                                <!--<div class="row form-group">
+                            <div class="col col-md-1"><label for="hf-password" class=" form-control-label">Agent</label></div>
+                            <div class="input-group col-lg-3 col-md-3">-->
+                                @*@Html.DropDownList("AgentIds", (MultiSelectList)ViewBag.Agents, new { multiple = "multiple", @id = "ddlAgent" })*@
+                                <!--@Html.ListBoxFor(m => m.AgentIds, (SelectList)ViewBag.Agents, new { @class = "listbox", @id = "ddlAgent" })
+                        </div>
+
+                        <div class="col col-md-1"><label for="email-input" class=" form-control-label">Queue</label></div>
+                        <div class="input-group col-md-2">-->
+                                @*@Html.DropDownList("QueueIds", (MultiSelectList)ViewBag.Queue, new { multiple = "multiple", @id = "ddlQueue" })*@
+                                <!--@Html.ListBoxFor(m => m.QueueIds, (MultiSelectList)ViewBag.Queue, new { @class = "listbox", @id = "ddlQueue" })
+
+                            </div>
+                        </div>-->
+
+                                <div class="row form-group">
+                                    @*<div class="col col-md-1"><label for="select" class=" form-control-label">Date</label></div>
+                                <div class="col-12 col-md-2">
+                                    @Html.DropDownListFor(model => model.SearchDate, new List<SelectListItem>()
+                                               {
+                                                  new SelectListItem() { Text = "Please select", Value = ""} ,
+                                                  new SelectListItem() { Text = "Yesterday", Value = "1"} ,
+                                                  new SelectListItem() { Text = "Last 7 Days", Value = "2"},
+                                                  new SelectListItem() { Text = "Last 15 Days", Value = "3"},
+                                                  new SelectListItem() { Text = "Last 30 Days", Value = "4"},
+                                                  new SelectListItem() { Text = "Custom Range", Value = "5"},
+                                               }, new { @id = "ddlDuration", @class = "form-control", @required = true })
+
+                                </div>*@
+                                    <div id="Div1" class="col col-md-8">
+                                        @*style="display:none"*@
+
+                                    <div class="row form-group">
+                                        <div class="col col-md-2"><label class=" form-control-label">From Date</label></div>
+                                        <div class="input-group col-md-4">
+
+                                            <input type="date" id="fromdate" value="@Model.FromDate" name="FromDate" placeholder="Select From Date..." class="form-control">
+                                        </div>
+
+
+                                        <div class="col col-md-2"><label class=" form-control-label">To Date</label></div>
+                                        <div class="input-group col-md-4">
+
+                                            <input type="date" id="todate" value="@Model.ToDate" name="ToDate" placeholder="Select To Date..." class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <div class="row form-group">
+                                <div class="input-group col-lg-3 col-md-3">
+                                    <input type="hidden" name="GridHtml" />
+                                    <button id="btnsubmit" type="button" class="btn btn-primary btn-sm" style="line-height:1.95">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                </div>
+            </div>
+        </div>
+        <!-- /Widgets
+<div class="clearfix"></div>
+<!-- Call Recording -->
+        <div class="orders" id="DivCallRecording">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="card">
+
+                        <div class="card-header">
+                            <strong>CALL RECORDINGS</strong>
+
+                            <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
+                            <button type="button" id="btncsv1" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv()">CSV</button>&nbsp;
+                            <button type="submit" id="btnPDF1" name="btn" value="PDF" class="btn btn-secondary btn-sm">PDF</button>&nbsp;
+                            @*<button type="submit" id="btnSubmit" value="Excel" name="btn" class="btn btn-secondary btn-sm">EXCEL</button>&nbsp;*@
+
+                        </div>
+
+                        <div class="card-body  card-block">
+
+                            <div class="table-stats order-table ov-h" id="Grid">
+                                <table class="table" id="tableCallRecording">
+                                    <thead>
+                                        <tr>
+                                            <th>Date & Time</th>
+                                            <th>Extension</th>
+                                            <th>Customer Number</th>
+                                            <th>Agent</th>
+                                            <th>Queue Name</th>
+                                            @*<th>Queue Owner</th>*@
+                                            <th>File Name</th>
+                                            @*<th>Listen</th>*@
+                                            <th>Download</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        @if (Model.CallRecordingList != null)
+                                        {
+                                            foreach (var item in Model.CallRecordingList)
+                                            {
+                                                <tr id="@item.FileName">
+
+                                                    <td>@Html.DisplayFor(modelItem => item.RecordingDate)</td>
+                                                    <td> @Html.DisplayFor(modelItem => item.AgentExtension)</td>
+                                                    <td> @Html.DisplayFor(modelItem => item.CustomerNo)</td>
+                                                    <td>@Html.DisplayFor(modelItem => item.AgentName)</td>
+                                                    <td> @Html.DisplayFor(modelItem => item.QueueName)</td>
+                                                    @*<td> @Html.DisplayFor(modelItem => item.QueueOwner)</td>*@
+                                                    <td> @Html.DisplayFor(modelItem => item.FileName)</td>
+                                                    @*<td><a class="playAudio" id="item.FileName" href="javascript:void(0)"><i class="fa fa-play"></i></a></td>*@
+                                                    <td><a href="@Url.Action("DownloadAudio", "CallRecording", new { filename = item.FileName })"><i class="fa fa-download"></i></a></td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div> <!-- /.table-stats -->
+                        </div>
+                    </div> <!-- /.card -->
+                </div>  <!-- /.col-lg-8 -->
+
+
+            </div>
+        </div>
+        <!-- /.orders -->
+
+
+
+        <audio hidden id="audioPlayer" controls></audio>
+
+        </form>
+    </div>
+</div><!-- .animated -->
+
+<div class="clearfix"></div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+
+   
+
+    //$(function () {
+    //    $("#ddlDuration").change(function () {
+
+    //        if ($(this).val() == "5") {
+    //            $("#Div1").show();
+    //        } else {
+    //            $("#Div1").hide();
+    //        }
+    //    });
+    //});
+
+    $('#btnsubmit').click(function () {
+        var fromdate = $('#fromdate').val();
+        var todate = $('#todate').val();
+        if (fromdate == null || todate == null) {
+            alert('Select From Date and To Date');
+            return false;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetCallRecordingsByFromDateToDate", "CallRecording")",
+            data: { fromdate: fromdate, todate: todate},
+            success: function (response) {
+                console.log(response);
+                $('#tbody').html('');
+                if (response != null) {
+                    $.each(response, function (k, v) {
+
+                        $('#tbody').append(`<tr id="${v.FileName}">
+                                            <td style="color:black;">${v.RecordingDate}</td>
+                                            <td style="color:black;">${v.AgentExtension}</td>
+                                            <td style="color:black;">${v.CustomerNo}</td>
+                                            <td style="color:black;">${v.AgentName}</td>
+                                            <td style="color:black;">${v.QueueName}</td>
+
+                                            <td style="color:black;">${v.FileName}</td>
+                                            
+                                            <td><a href="@Url.Action("DownloadAudio", "CallRecording")?id='${v.FileName}'"><i class="fa fa-download"></i></a></td>
+                                            </tr>`); /*<td style="color:black;">${v.QueueOwner}</td>*/ /*<td><a class="playAudio" id="${v.FileName}" href="javascript:void(0)"><i class="fa fa-play"></i></a></td>*/
+                    });
+                }
+            }
+        })
+
+    })
+
+    $('.playAudio').click(function () {
+        var filename = $(this).closest("tr").attr("id");
+        //console.log("Selected Row ID:", filename);
+
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("PlayAudio", "CallRecording")",
+            data: { filename: filename },
+            /*dataType:"blob",*/
+            success: function (response) {
+                console.log(response);
+                var audioUrl = URL.createObjectURL(response);
+                var audio = new Audio(audioUrl);
+                audio.play();
+
+
+                //response.play();
+
+                //var fileInput = document.createElement('audio');
+                ///*fileInput.type = 'file';*/
+                //fileInput.accept = 'audio/wav';
+                //fileInput.onchange = function (event) {
+                //    var file = response;
+                //    if (file) {
+                //        var audio = new Audio(URL.createObjectURL(file));
+                //        audio.play();
+                //    }
+                //};
+                //fileInput.click();
+
+                //var audioFile = response;
+
+                //// Set the 'src' attribute of the audio element
+                //$('#audioPlayer').attr('src', audioFile);
+                //$('#audioPlayer')[0].play();
+
+                //// Play the audio when the button is clicked
+                //$('#playButton').on('click', function () {
+                //    $('#audioPlayer')[0].play();
+                //});
+
+                //var audioPlayer = $('#audioPlayer')[0];
+
+                //// Get the current source of the audio element
+                //audioPlayer.src = audioFile;
+                //var currentSource = audioPlayer.src;
+                //console.log(currentSource);
+                //// Remove the "file://" prefix if present
+                //var cleanedSource = currentSource.replace("file:///", "");
+                //console.log(cleanedSource);
+                //// Set the cleaned source back to the audio element
+                //audioPlayer.src = cleanedSource;
+
+                //// Now you can play the audio
+                //audioPlayer.play();
+
+
+                //var sound = new Howl({
+                //    src: [response],
+                //    /*format: ['wav']*/
+                //});
+                //sound.play();
+            },
+            error: function (error) {
+                console.error('Error fetching audio file:', error);
+            }
+        })
+    })
+
+    $(function () {
+        $("#ddlAgent").change(function () {
+            if ($(this).val() != null) {
+                $("#ddlQueue").multiselect("disable");
+            } else {
+                $("#ddlQueue").multiselect("enable");
+
+            }
+        });
+    });
+    $(function () {
+        $("#ddlQueue").change(function () {
+            if ($(this).val() != null) {
+                /*$("#DivIVRMissed").hide();*/
+                $("#ddlAgent").multiselect("disable");
+            }
+            else {
+                /*$("#DivIVRMissed").hide();*/
+                $("#ddlAgent").multiselect("enable");
+            }
+
+        });
+    });
+
+</script>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script src="http://cdn.rawgit.com/davidstutz/bootstrap-multiselect/master/dist/js/bootstrap-multiselect.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('.listbox').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+
+
+
+        $(function () {
+
+            var arNames5 = $('#ddlQueue').val()
+            //alert(arNames5)
+                if (arNames5 != null) {
+                if (arNames5 == "IVR MissedCall")
+                {
+                    $("#DivIVRMissed").show();
+                    $("#DivDetails").hide();
+                    $("#DivSummary").hide();
+                    $("#DivMissed").hide();
+                    $("#DivAgent").hide();
+                    $("#DivQueue").hide();
+                }
+                //$("#ddlAgent").multiselect("disable");
+
+                } else {
+
+                    //$("#ddlAgent").multiselect("enable");
+
+                }
+
+        });
+
+        //var arNames = $('#ddlDuration').val()
+        ////var reportName = $('#ddlReport').val()
+        //if (arNames == "5") {
+        //    $("#Div1").show();
+        //} else {
+        //    $("#Div1").hide();
+        //}
+
+        //if (reportName == "1") {
+
+        //    $("#DivSummary").show();
+        //    document.getElementById("ddlDirection").disabled = true;
+        //    $("#ddlAgent").multiselect("disable");
+        //    $("#ddlQueue").multiselect("disable");
+        //}
+        //else if (reportName == "2") {
+        //    $("#DivDetails").show();
+        //    document.getElementById("ddlDirection").disabled = false;
+        //    $("#ddlAgent").multiselect("enable");
+        //}
+        //else if (reportName == "4") {
+        //    $("#DivMissed").show();
+        //    document.getElementById("ddlDirection").disabled = true;
+        //    $("#ddlAgent").multiselect("enable");
+        //}
+        //else if (reportName == "3") {
+        //    $("#DivAgent").show();
+        //    document.getElementById("ddlDirection").disabled = true;
+        //    $("#ddlAgent").multiselect("enable");
+        //    $("#ddlQueue").multiselect("disable");
+        //}
+        //else if (reportName == "5") {
+        //    $("#DivQueue").show();
+        //    document.getElementById("ddlDirection").disabled = true;
+        //    $("#ddlAgent").multiselect("disable");
+        //    $("#ddlQueue").multiselect("enable");
+        //}
+    }
+    )
+</script>
+<script type="text/javascript">
+
+    $(function () {
+        $("#btnPDF1").click(function () {
+            $("input[name='GridHtml']").val($("#DivCallRecording").html());
+        });
+    });
+    //$(function () {
+    //    $("#btnPDF2").click(function () {
+    //        $("input[name='GridHtml']").val($("#DivDetails").html());
+    //    });
+    //});
+    //$(function () {
+    //    $("#btnPDF3").click(function () {
+    //        $("input[name='GridHtml']").val($("#DivMissed").html());
+    //    });
+    //});
+    //$(function () {
+    //    $("#btnPDF4").click(function () {
+
+    //        $("input[name='GridHtml']").val($("#DivAgent").html());
+    //    });
+    //});
+    //$(function () {
+    //    $("#btnPDF5").click(function () {
+    //        $("input[name='GridHtml']").val($("#DivQueue").html());
+    //    });
+    //});
+    //$(function () {
+    //    $("#btnPDF6").click(function () {
+    //        $("input[name='GridHtml']").val($("#DivIVRMissed").html());
+    //    });
+    //});
+</script>
+<script src="../Scripts/jquery.tabletoCSV.js"></script>
+
+<script type="text/javascript">
+    function exporttocsv() {
+
+        $("#tableCallRecording").tableToCSV({
+            filename: 'CallSummaryReport'
+        });
+    }
+    //function exporttocsv2() {
+
+    //    $("#tableDetails").tableToCSV({
+    //        filename: 'CallDetailsReport'
+    //    });
+    //}
+    //function exporttocsv3() {
+
+    //    $("#tableMissed").tableToCSV({
+    //        filename: 'MissedCallReport'
+    //    });
+    //}
+    //function exporttocsv4() {
+
+    //    $("#tableAgent").tableToCSV({
+    //        filename: 'AgentCallReport'
+    //    });
+    //}
+    //function exporttocsv5() {
+
+    //    $("#tableQueue").tableToCSV({
+    //        filename: 'QueueCallReport'
+    //    });
+    //}
+    //function exporttocsv6() {
+
+    //    $("#tableIVR").tableToCSV({
+    //        filename: 'IVRMissedCallReport'
+    //    });
+    //}
+</script>

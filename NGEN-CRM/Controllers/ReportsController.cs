@@ -18,6 +18,8 @@ namespace NGEN_CRM.Controllers
 {
     public class ReportsController : Controller
     {
+        CLSCommen cLSCommen = new CLSCommen();
+
         // GET: Reports
         public ActionResult Report()
         {
@@ -30,6 +32,17 @@ namespace NGEN_CRM.Controllers
             //obj.CallList = HomeRepository.GetCallSummaryReport(obj);
             ViewBag.Agents = new SelectList(HomeRepository.getAllAgent(), "AgentName", "AgentName");
             ViewBag.Queue = new SelectList(HomeRepository.getAllQueueName(), "AgentName", "AgentName");
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
            
         }
@@ -65,7 +78,7 @@ namespace NGEN_CRM.Controllers
             }
             else
             {
-                obj.ToDate = Convert.ToDateTime(obj.ToDate).AddDays(-1).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
+                obj.ToDate = Convert.ToDateTime(obj.ToDate).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
                 obj.FromDate = Convert.ToDateTime(obj.FromDate).ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
 
             }
@@ -442,6 +455,17 @@ namespace NGEN_CRM.Controllers
             {
                 ExportToPdf(dt7, "IVR Missed Call Report");
             }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View("Report", obj);
 
 

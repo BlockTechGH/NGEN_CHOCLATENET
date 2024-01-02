@@ -14,6 +14,8 @@ namespace NGEN_CRM.Controllers
 {
     public class ChatReportController : Controller
     {
+        CLSCommen cLSCommen = new CLSCommen();
+
         public ActionResult Report()
         {
             Chat obj = new Chat();
@@ -26,6 +28,17 @@ namespace NGEN_CRM.Controllers
             //obj.CallList = HomeRepository.GetCallSummaryReport(obj);
             ViewBag.Agents = new SelectList(objch.getAllAgent(), "AgentName", "AgentName");
             ViewBag.Queue = new SelectList(objch.getAllQueues(), "AgentName", "AgentName");
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
 
         }
@@ -304,6 +317,17 @@ namespace NGEN_CRM.Controllers
             {
                 ExportToPdf(dt5, "Channel Report");
             }
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View("Report", obj);
 
 

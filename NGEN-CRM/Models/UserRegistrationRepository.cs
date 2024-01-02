@@ -20,12 +20,13 @@ namespace NGEN_CRM.Models
             ParamList.Add(new DbParameterList("password", obj.Password, DbType.String));
             ParamList.Add(new DbParameterList("email",obj.Email, DbType.String));
             ParamList.Add(new DbParameterList("role", obj.RoleName, DbType.String));
+            ParamList.Add(new DbParameterList("menu_Ids", obj.MenuIds, DbType.String));
             object s = DbController.ExecuteScalar("SP_UserCreation", ParamList);
             long isSuccess = Convert.ToInt64(s);
             return isSuccess;
             
         }
-        public static long UpdateUser(UserRegistration obj) //Save User
+        public static long UpdateUser(UserRegistration obj) //Update User
         {
 
             List<DbParameterList> ParamList = new List<DbParameterList>();
@@ -36,6 +37,7 @@ namespace NGEN_CRM.Models
             ParamList.Add(new DbParameterList("password", obj.Password, DbType.String));
             ParamList.Add(new DbParameterList("email", obj.Email, DbType.String));
             ParamList.Add(new DbParameterList("role", obj.RoleName, DbType.String));
+            ParamList.Add(new DbParameterList("menu_Ids", obj.MenuIds, DbType.String));
             object s = DbController.ExecuteScalar("SP_UserCreation", ParamList);
             long isSuccess = Convert.ToInt64(s);
             return isSuccess;
@@ -57,18 +59,53 @@ namespace NGEN_CRM.Models
             UserRegistration obj = new UserRegistration();
             ParamList.Add(new DbParameterList("id", ID, DbType.Int32));
             ParamList.Add(new DbParameterList("flag", "Id", DbType.String));
-            DataTable tblItems = DbController.ExecuteDataTable("SP_UserCreation", ParamList);
-            foreach (DataRow item in tblItems.Rows)
+            //DataTable tblItems = DbController.ExecuteDataTable("SP_UserCreation", ParamList);
+            //foreach (DataRow item in tblItems.Rows)
+            //{
+            //    obj.Id = Convert.ToInt32(item["Id"]);
+            //    obj.Name = item["User_Name"].ToString();
+            //    obj.Password = item["User_Pswd"].ToString();
+            //    obj.Login_ID = item["User_LoginID"].ToString();
+            //    obj.InitialUserLoginID= item["User_LoginID"].ToString();
+            //    obj.Email = item["User_Email"].ToString();
+            //    obj.RoleName = item["User_RoleID"].ToString();
+            //    obj.isEdit = true;
+
+            //}
+
+            DataSet ds = DbController.ExecuteDataSet("SP_UserCreation", ParamList);
+
+            if (ds != null && ds.Tables.Count > 0)
             {
-                obj.Id = Convert.ToInt32(item["Id"]);
-                obj.Name = item["User_Name"].ToString();
-                obj.Password = item["User_Pswd"].ToString();
-                obj.Login_ID = item["User_LoginID"].ToString();
-                obj.InitialUserLoginID= item["User_LoginID"].ToString();
-                obj.Email = item["User_Email"].ToString();
-                obj.RoleName = item["User_RoleID"].ToString();
-                obj.isEdit = true;
-              
+                DataTable tblUser = ds.Tables[0];  // Assuming the first table is for user details
+
+                foreach (DataRow item in tblUser.Rows)
+                {
+                    obj.Id = Convert.ToInt32(item["Id"]);
+                    obj.Name = item["User_Name"].ToString();
+                    obj.Password = item["User_Pswd"].ToString();
+                    obj.Login_ID = item["User_LoginID"].ToString();
+                    obj.InitialUserLoginID = item["User_LoginID"].ToString();
+                    obj.Email = item["User_Email"].ToString();
+                    obj.RoleName = item["User_RoleID"].ToString();
+                    obj.isEdit = true;
+                }
+
+                // Now, you can process other tables if needed.
+                if (ds.Tables.Count > 1)
+                {
+                    DataTable tblMenuAccess = ds.Tables[1];  // Assuming the second table is for other details
+                    if(tblMenuAccess.Rows.Count != 0)
+                    {
+                        foreach (DataRow item in tblMenuAccess.Rows)
+                        {
+                            obj.MenuIds = item["MenuIDs"].ToString();
+                            var userid = item["UserID"].ToString();
+                            var id = item["ID"].ToString();
+                            //obj.isEdit = true;
+                        }
+                    }
+                }
             }
             obj.UserList = getAllUser();
             return obj;

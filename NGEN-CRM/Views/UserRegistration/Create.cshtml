@@ -45,7 +45,7 @@
                                                     <div class="col-12 col-md-9"><input id="hf-email" name="Name" value="@Model.Name" required class="form-control"></div>
                                                     @Html.Hidden("isEdit", @Model.isEdit)
                                                     @Html.Hidden("Id", @Model.Id)
-                                                    @Html.Hidden("InitialUserLoginID",@Model.InitialUserLoginID)
+                                                    @Html.Hidden("InitialUserLoginID", @Model.InitialUserLoginID)
                                                 </div>
                                                 <div class="row form-group">
                                                     <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Role</label></div>
@@ -68,6 +68,58 @@
                                                 </div>
 
                                                 <div class="row form-group">
+                                                    <div class="col col-md-3"><label for="hf-password" class=" form-control-label">Choose Accessible Menu</label></div>
+                                                    <table style="margin-left: 14px;">
+                                                        @foreach (var menu in ViewBag.Menu)
+                                                        {
+                                                            if (Model.MenuId != null && Model.MenuId.Contains(Convert.ToString(menu.MenuID)))
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <input type="checkbox" id="@menu.MenuID" name="Menu" value="@menu.MenuID" checked>
+                                                                        <label class=" form-control-label">@menu.MenuName</label>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <input type="checkbox" id="@menu.MenuID" name="Menu" value="@menu.MenuID">
+                                                                        <label class=" form-control-label">@menu.MenuName</label>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+
+
+                                                        }
+                                                        @*@for (int i = 0; i < ViewBag.Menu.Count; i++)
+        {
+            if (ViewBag.Menu[i])
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" id="@ViewBag.Menu[i].MenuID" name="Menu" value="@ViewBag.Menu[i].MenuID" checked>
+                        <label class=" form-control-label">@ViewBag.Menu[i].MenuName</label>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" id="@ViewBag.Menu[i].MenuID" name="Menu" value="@ViewBag.Menu[i].MenuID">
+                        <label class=" form-control-label">@ViewBag.Menu[i].MenuName</label>
+                    </td>
+                </tr>
+            }
+        }*@
+                                                    </table>
+    
+                                                    </div>
+    
+
+                                                    <div class="row form-group">
                                                     <div class="col col-md-10">
                                                         <button id="submit" type="reset" class="btn btn-default btn-sm" style="margin-right:6px;float:right" onclick="location.href='@Url.Action("Contact", "Home")'"> Cancel</button>
                                                         @if (@Model.isEdit)

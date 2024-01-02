@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using QvertzDBLink;
 namespace NGEN_CRM.Models
@@ -274,6 +277,23 @@ namespace NGEN_CRM.Models
             //CLAgntlist.Add(obj1);
             return CLAgntlist;
         }
+        public static List<QueueNo> getAllQueueNumber() //Get All data in Branch
+        {
+            List<DbParameterList> ParamList = new List<DbParameterList>();
+            List<QueueNo> CLAgntlist = new List<QueueNo>();
+            QueueNo obj = new QueueNo();
+            DataTable tblItems = DbController.ExecuteDataTable("[SP_GetQueueNumbers]", ParamList);
+            foreach (DataRow item in tblItems.Rows)
+            {
+                obj = new QueueNo();
+                obj.QueueExtension = (item["QueueExtension"]).ToString();
+                CLAgntlist.Add(obj);
+            }
+            Agent obj1 = new Agent();
+            //obj1.AgentName = "IVR MissedCall";
+            //CLAgntlist.Add(obj1);
+            return CLAgntlist;
+        }
         public static List<Home> GetCallSummaryReport(Home Obj) //Get All Roles
         {
             List<Home> HomeList = new List<Home>();
@@ -488,6 +508,82 @@ namespace NGEN_CRM.Models
                 }
             }
             return HomeList;
+        }
+        public static List<string> GetCallRecordingDetails()
+        {
+
+            string folderPath = "";
+
+            #if DEBUG
+                folderPath = @"C:\Recordings"; // Path of the test source file
+            #else
+                folderPath = @"C:\ProgramData\3CX\Instance1\Data\Recordings"; // Path of the real source file
+            #endif
+
+            //folderPath=@"file://it-desktop/3cx/Instance1/Data/Recordings/";
+            //
+            //byte[] fileData = await DownloadFileAsync("192.168.1.112", 8080, folderPath);
+
+            string[] subdirectories = Directory.GetDirectories(folderPath);
+
+            
+            List<string> filenames = new List<string>();
+            //Display details for each subdirectory
+            foreach (string subdirectory in subdirectories)
+            {
+                List<string> audioFiles = new List<string>();
+                if (Directory.Exists(subdirectory))
+                {
+                    // Retrieve audio files (change the search pattern if needed)
+                    //string[] audioFiles = Directory.GetFiles(folderPath, "*.mp3");
+                    string[] audioExtensions = { "*.mp3", "*.wav", "*.ogg", "*.flac", "*.aac", "*.wma" };
+
+                    foreach (string extension in audioExtensions)
+                    {
+                        audioFiles.AddRange(Directory.GetFiles(subdirectory, extension));
+                    }
+                    foreach (string audioFile in audioFiles)
+                    {
+                        string fileName = Path.GetFileName(audioFile);
+                        filenames.Add(fileName);
+                    }
+                }
+            }
+
+            //List<string> audioFiles = new List<string>();
+            //if (Directory.Exists(folderPath))
+            //{
+            //    // Retrieve audio files (change the search pattern if needed)
+            //    //string[] audioFiles = Directory.GetFiles(folderPath, "*.mp3");
+            //    string[] audioExtensions = { "*.mp3", "*.wav", "*.ogg", "*.flac", "*.aac", "*.wma" };
+
+            //    foreach (string extension in audioExtensions)
+            //    {
+            //        audioFiles.AddRange(Directory.GetFiles(folderPath, extension));
+            //    }
+            //    foreach (string audioFile in audioFiles)
+            //    {
+            //        string fileName = Path.GetFileName(audioFile);
+            //        filenames.Add(fileName);
+            //    }
+            //}
+            return filenames;
+        }
+
+        static async Task<byte[]> DownloadFileAsync(string ipAddress, int port, string remotePath)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    return await httpClient.GetByteArrayAsync($"http://{ipAddress}:{port}{remotePath}");
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine($"Error downloading file: {e.Message}");
+                    return null;
+                }
+            }
         }
     }
 }

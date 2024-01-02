@@ -9,6 +9,7 @@ namespace NGEN_CRM.Controllers
 {
     public class ChatWallboardController : Controller
     {
+        CLSCommen cLSCommen = new CLSCommen();
         public ActionResult Widget()
         {
             Chat obj = new Chat();
@@ -28,6 +29,17 @@ namespace NGEN_CRM.Controllers
             ViewBag.TotalConv = TotalConv;
             ViewBag.TotalMsg = TotalMsg;
             ViewBag.TotalAvgT = TotalAvgT;
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return PartialView("IndexPa", obj);
         }
 
@@ -50,6 +62,17 @@ namespace NGEN_CRM.Controllers
             ViewBag.TotalConv = TotalConv;
             ViewBag.TotalMsg = TotalMsg;
             ViewBag.TotalAvgT = TotalAvgT;
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
         }
     }

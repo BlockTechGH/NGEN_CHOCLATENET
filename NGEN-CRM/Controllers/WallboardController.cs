@@ -11,7 +11,7 @@ namespace NGEN_CRM.Controllers
 {
     public class WallboardController : Controller
     {
-
+        CLSCommen cLSCommen = new CLSCommen();
         public ActionResult Widget()
         {
             Home obj = new Home();
@@ -22,8 +22,13 @@ namespace NGEN_CRM.Controllers
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
             obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
-            double Avg = obj.QCallList.Where(item => item.QSLA != "0").Average(item => Convert.ToDouble(item.QSLA.ToString().Replace(@"%", "")));
-            Avg = Math.Round(Avg, 1);
+            double Avg = 0.00;
+            if (obj.QCallList.Count != 0)
+            {
+                Avg = obj.QCallList.Where(item => item.QSLA != "0").Average(item => Convert.ToDouble(item.QSLA.ToString().Replace(@"%", "")));
+                Avg = Math.Round(Avg, 1);
+            }
+            
             int TotalMissed = Convert.ToInt32(obj.Missed);
             int TotalINBOUND = Convert.ToInt32(obj.Inbound);
             int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
@@ -40,6 +45,17 @@ namespace NGEN_CRM.Controllers
             }
             else { ViewBag.SLA = "0"; }
             ViewBag.Total = Total;
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return PartialView("IndexPa", obj);
         }
         // GET: Wallboard
@@ -55,8 +71,14 @@ namespace NGEN_CRM.Controllers
             obj = HomeRepository.GetData(obj);
             obj.CallList = HomeRepository.GetAgentData(obj);
             obj.QCallList = HomeRepository.GetAgentQReportDashboard(obj);
-            double Avg = obj.QCallList.Where(item => item.QSLA != "0").Average(item => Convert.ToDouble(item.QSLA.ToString().Replace(@"%", "")));
-            Avg=Math.Round(Avg, 1);
+            double Avg = 0.00;
+            if (obj.QCallList.Count != 0)
+            {
+                Avg = obj.QCallList.Where(item => item.QSLA != "0").Average(item => Convert.ToDouble(item.QSLA.ToString().Replace(@"%", "")));
+                Avg = Math.Round(Avg, 1);
+            }
+            
+            
             int TotalINBOUND = Convert.ToInt32(obj.Inbound);
             int TotalOUTBOUND = Convert.ToInt32(obj.Outbound);
             int TotalMissed = Convert.ToInt32(obj.Missed);
@@ -74,6 +96,17 @@ namespace NGEN_CRM.Controllers
             }
             else { ViewBag.SLA = "0"; }
             ViewBag.Total = Total;
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
         }
         [HttpPost]
@@ -95,7 +128,17 @@ namespace NGEN_CRM.Controllers
             dtAgent = HomeRepository.GetAgentTable(obj);
             obj.Qstring = GetChartString(dtQSummary);
             obj.Agentstring = GetChartString(dtAgent);
-            
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View("Dashboard", obj);
 
 

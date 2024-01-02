@@ -13,13 +13,17 @@ using System.Timers;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
+using Dapper;
+using System.Data.SqlClient;
 
 namespace NGEN_CRM.Controllers
 {
   
     public class HomeController : Controller
     {
-    
+        private Connection sqlConnectionString = new Connection();
+        CLSCommen cLSCommen = new CLSCommen();
+
         public  ActionResult Contact()
         {
            
@@ -40,13 +44,33 @@ namespace NGEN_CRM.Controllers
             ViewBag.Inbound = TotalINBOUND-TotalMissed;
             ViewBag.Outbound = TotalOUTBOUND;
             ViewBag.Total = Total;
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
         }
       
         public ActionResult Create(Home obj,string btn)
         {
-           
-                DataTable dt = new DataTable();
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
+            DataTable dt = new DataTable();
                 if (obj.Duration == null)
                 {
                 obj.ToDate = DateTime.Now.ToString("yyyy/MM/dd", new System.Globalization.CultureInfo("nl-NL"));
@@ -274,5 +298,6 @@ namespace NGEN_CRM.Controllers
             byte[] FileBytes = System.IO.File.ReadAllBytes(ReportURL);
             return File(FileBytes, "application /pdf");
         }
+
     }
 }

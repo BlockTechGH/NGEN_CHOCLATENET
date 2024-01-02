@@ -13,6 +13,8 @@ namespace NGEN_CRM.Controllers
 {
     public class DashboardController : Controller
     {
+        CLSCommen cLSCommen = new CLSCommen();
+
         // GET: Dashboard
         public ActionResult Dashboard()
         {
@@ -39,6 +41,17 @@ namespace NGEN_CRM.Controllers
             ViewBag.Inbound = TotalINBOUND;
             ViewBag.Outbound = TotalOUTBOUND;
             ViewBag.Total = Total;
+
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
+
             return View(obj);
         }
         [HttpPost]
@@ -87,7 +100,7 @@ namespace NGEN_CRM.Controllers
             dtAgent= HomeRepository.GetAgentTable(obj);
             obj.Qstring = GetChartString(dtQSummary);
             obj.Agentstring = GetChartString(dtAgent);
-           
+
             //foreach (DataRow item in tblItems.Rows)
             //{
             //    obj = new Home();
@@ -110,7 +123,15 @@ namespace NGEN_CRM.Controllers
             //}
             //return HomeList;
 
-
+            //SideMenuName
+            //using (var conn = new SqlConnection(sqlConnectionString.ConnectionString))
+            //{
+            //    conn.Open();
+            //    var menuIds = conn.Query<string>($"select MenuIDs from UserMenuAccessNgen where UserID={Session["UsmID"]}").FirstOrDefault();
+            //    ViewBag.UserMenu = conn.Query<SideMenuNgen>($"select * from SideMenuNgen where MenuID in ({menuIds})").ToList();
+            //    conn.Close();
+            //}
+            ViewBag.UserMenu = cLSCommen.GetUserMenu(Convert.ToInt16(Session["UsmID"]));
 
             return View("Dashboard", obj);
 

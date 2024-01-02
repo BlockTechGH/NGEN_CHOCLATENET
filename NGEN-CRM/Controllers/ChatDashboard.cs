@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NGEN_CRM.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +10,8 @@ namespace NGEN_CRM.Controllers
 {
     public class ChatDashboard : ApiController
     {
+        CLSCommen cLSCommen = new CLSCommen();
+
         // GET api/<controller>
         public IEnumerable<string> Get()
         {

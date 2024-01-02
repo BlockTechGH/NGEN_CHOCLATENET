@@ -44,13 +44,13 @@ namespace NGEN_CRM.Controllers
                         if(split[0].Contains("%3A"))
                         {
                             var pattern = "%3A";
-                            var firstsplit1 = Regex.Replace(split[0], pattern, " ");
-
-                            var firstsplit2 = firstsplit1.Split(' ');
-                            //var queuename = firstsplit2[2];
-                            model1.QueueName = firstsplit2[2];
-                            //var externalnumber = firstsplit2[1];//customer
-                            model1.CustomerNo = firstsplit2[1];//customer
+                            var firstsplit1 = Regex.Split(split[0], pattern);
+                            
+                            //var firstsplit2 = firstsplit1.Split(' ');
+                            var queuename = firstsplit1[0].Trim('[');
+                            model1.QueueName = queuename;
+                            //var externalnumber = firstsplit1[1];//customer
+                            model1.CustomerNo = firstsplit1[1];//customer
 
                             var d = split[1].Split('_');
                             var d1 = d[1].Split('-');

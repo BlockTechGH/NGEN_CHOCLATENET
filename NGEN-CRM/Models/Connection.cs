@@ -21,11 +21,8 @@ namespace NGEN_CRM.Models
         public string ConnectionString { get; } = @"Server=LAPTOP-EBN4GVUL\SQLEXPRESS;Database=3CX Competitive Wallboard;Trusted_Connection=True;MultipleActiveResultSets=true;timeout=3000";
 
 #else
-        //wecare
-        public string ConnectionString { get; } = @"Server=IT-DESKTOP\SQLEXPRESS;Database=3CX Competitive Wallboard;User Id=user;Password=password;MultipleActiveResultSets=true";
-
         //chocolateness
-        //public string ConnectionString { get; } = @"Server=IT-DESKTOP\SQLEXPRESS;Database=3CX Competitive Wallboard;User Id=user;Password=password;MultipleActiveResultSets=true";
+        public string ConnectionString { get; } = @"Server=DC1\SQLEXPRESS;Database=3CX Competitive Wallboard;User Id=btadmin;Password=btadmin;MultipleActiveResultSets=true";
 #endif
 
     }

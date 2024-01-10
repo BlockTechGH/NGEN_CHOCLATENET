@@ -262,6 +262,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DummyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IBOBExtensionACDController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\QueueOwnerController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
@@ -286,6 +287,7 @@
     <Compile Include="Models\ChatDbLink.cs" />
     <Compile Include="Models\CLSCommen.cs" />
     <Compile Include="Models\Connection.cs" />
+    <Compile Include="Models\ExtensionACD_IBOB_Log.cs" />
     <Compile Include="Models\Home.cs" />
     <Compile Include="Models\HomeRepository.cs" />
     <Compile Include="Models\Login.cs" />
@@ -432,6 +434,7 @@
     <Content Include="Views\CallRecording\Report.cshtml" />
     <Content Include="Views\QueueOwner\Create.cshtml" />
     <Content Include="Views\Dummy\Dummy1.cshtml" />
+    <Content Include="Views\IBOBExtensionACD\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

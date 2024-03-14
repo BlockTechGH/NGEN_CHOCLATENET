@@ -2,86 +2,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model NGEN_CRM.Models.ExtensionACD_IBOB_Log
+@model List<NGEN_CRM.Models.AgentDetailReport>
 
 <div class="content">
     <div class="animated fadeIn">
         <form class="form-validate form-horizontal" action="Create" method="post">
-            <div class="card">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>CALL DETAILS REPORT</strong>
-                            </div>
-                            <div class="card-body card-block">
-                                <!--<div class="row form-group">
-                        <div class="col col-md-1"><label for="hf-password" class=" form-control-label">Agent</label></div>
-                        <div class="input-group col-lg-3 col-md-3">-->
-                                @*@Html.DropDownList("AgentIds", (MultiSelectList)ViewBag.Agents, new { multiple = "multiple", @id = "ddlAgent" })*@
-                                @*@Html.ListBoxFor(m => m.AgentIds, (SelectList)ViewBag.Agents, new { @class = "listbox", @id = "ddlAgent" })*@
-                        <!--</div>
-
-                        <div class="col col-md-1"><label for="email-input" class=" form-control-label">Queue</label></div>
-                        <div class="input-group col-md-2">-->
-                                @*@Html.DropDownList("QueueIds", (MultiSelectList)ViewBag.Queue, new { multiple = "multiple", @id = "ddlQueue" })*@
-                                @*@Html.ListBoxFor(m => m.QueueIds, (MultiSelectList)ViewBag.Queue, new { @class = "listbox", @id = "ddlQueue" })*@
-
-                            <!--</div>
-                        </div>-->
-
-                                <div class="row form-group">
-                                    @*<div class="col col-md-1"><label for="select" class=" form-control-label">Date</label></div>
-                                <div class="col-12 col-md-2">
-                                    @Html.DropDownListFor(model => model.SearchDate, new List<SelectListItem>()
-                                               {
-                                                  new SelectListItem() { Text = "Please select", Value = ""} ,
-                                                  new SelectListItem() { Text = "Yesterday", Value = "1"} ,
-                                                  new SelectListItem() { Text = "Last 7 Days", Value = "2"},
-                                                  new SelectListItem() { Text = "Last 15 Days", Value = "3"},
-                                                  new SelectListItem() { Text = "Last 30 Days", Value = "4"},
-                                                  new SelectListItem() { Text = "Custom Range", Value = "5"},
-                                               }, new { @id = "ddlDuration", @class = "form-control", @required = true })
-
-                                </div>*@
-                                    <div id="Div1" class="col col-md-8">
-                                        @*style="display:none"*@
-
-                                        <div class="row form-group">
-                                            <div class="col col-md-2"><label class=" form-control-label">From Date</label></div>
-                                            <div class="input-group col-md-4">
-
-                                                <input type="date" id="fromdate" value="@Model.FromDate" name="FromDate" placeholder="Select From Date..." class="form-control">
-                                            </div>
-
-
-                                            <div class="col col-md-2"><label class=" form-control-label">To Date</label></div>
-                                            <div class="input-group col-md-4">
-
-                                                <input type="date" id="todate" value="@Model.ToDate" name="ToDate" placeholder="Select To Date..." class="form-control">
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
-                                </div>
-                                <div class="row form-group">
-                                    <div class="input-group col-lg-3 col-md-3">
-                                        <input type="hidden" name="GridHtml" />
-                                        <button id="btnsubmit" type="button" class="btn btn-primary btn-sm" style="line-height:1.95">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-
-                    </div>
-                </div>
-            </div>
+            
             <!-- /Widgets
-    <div class="clearfix"></div>
-    <!-- Call Detail Report -->
+            <div class="clearfix"></div>
+            <!-- Call Detail Report -->
             <div class="orders" id="DivCallRecording">
                 <div class="row">
                     <div class="col-lg-12">
@@ -89,7 +18,7 @@
                         <div class="card">
 
                             <div class="card-header">
-                                <strong>CALL DETAILS</strong>
+                                <strong>AGENT DETAIL REPORT</strong>
 
                                 <label for="hf-password" class=" form-control-label" style="margin-left:660px">Export To:</label>&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="btncsv1" name="btn" value="CSV" class="btn btn-secondary btn-sm" onclick="exporttocsv()">CSV</button>&nbsp;
@@ -104,48 +33,31 @@
                                     <table class="table" id="tableCallRecording">
                                         <thead>
                                             <tr>
-                                                @*<th style="width: 110px;">Date</th>*@
-                                                <th>Agent ID</th>
-                                                <th>Agent</th>
-                                                <th>Ext</th>
-                                                <th style="background-color: #03a9f3; color: black;">Total Calls</th>
-                                                <th style="background-color: #03a9f3; color: black;">Total Inb Calls</th>
-                                                <th style="background-color: #03a9f3; color: black;">Total Out Calls</th>
-                                                <th style="background-color: #00c292; color: black;">Inb ACD Calls</th>
-                                                <th style="background-color: #00c292; color: black;">Inb Ext Calls</th>
-                                                <th style="background-color: #00c292; color: black;">Avg Talktime Inb ACD</th>
-                                                <th style="background-color: #00c292; color: black;">Avg Talktime Inb Ext</th>
-                                                <th style="background-color: #00c292; color: black;">Inb Calls Avg Talktime</th>
-                                                <th style="background-color: #00c292; color: black;">Inb Calls Total Talktime</th>
-                                                <th style="background-color: #ab8ce4; color: black;">Out Calls External</th>
-                                                <th style="background-color: #ab8ce4; color: black;">Out Calls Internal</th>
-                                                <th style="background-color: #ab8ce4; color: black;">Out Calls Avg Talktime</th>
-                                                <th style="background-color: #ab8ce4; color: black;">Out Calls Total Talktime</th>
-
+                                                @*<th>Agent Name</th>
+                                                <th>Agent ID</th>*@
+                                                <th>Extension</th>
+                                                <th>Call Start Time</th>
+                                                <th>Call End Time</th>
+                                                <th>Duration</th>
+                                                <th>Called Number</th>
+                                                <th>Call Routed</th>
+                                                @*<th>Talk Time</th>*@
+                                                <th>Call Type</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbody">
-                                            @foreach (var report in Model.modelList)
+                                            @foreach (var report in Model.ToList())
                                             {
                                                 <tr>
                                                     @*<td>@Html.DisplayFor(modelItem => report.Date)</td>*@
-                                                    <td>@Html.DisplayFor(modelItem => report.AgentID)</td>
-                                                    <td>@Html.DisplayFor(modelItem => report.AgentName)</td>
-                                                    <td>@Html.DisplayFor(modelItem => report.ExtensionNumber)</td>
-                                                    <td style="background-color: #03a9f3; color: black;">@Html.DisplayFor(modelItem => report.TotalCalls)</td>
-                                                    <td style="background-color: #03a9f3; color: black;">@Html.DisplayFor(modelItem => report.TotalInboundCalls)</td>
-                                                    <td style="background-color: #03a9f3; color: black;">@Html.DisplayFor(modelItem => report.TotalOutboundCalls)</td>
-                                                    <td style="background-color: #00c292; color: black;">@Html.DisplayFor(modelItem => report.InboundACD_Calls)</td>
-                                                    <td style="background-color: #00c292; color: black;">@Html.DisplayFor(modelItem => report.InboundExtension_Calls)</td>
-                                                    <td style="background-color: #00c292; color: black;">@Html.DisplayFor(modelItem => report.ACDAvgTalktime)</td>
-                                                    <td style="background-color: #00c292; color: black;">@Html.DisplayFor(modelItem => report.ExtensionAvgTalktime)</td>
-                                                    <td style="background-color: #00c292; color: black;">@Html.DisplayFor(modelItem => report.AvgTalktime)</td>
-                                                    <td style="background-color: #00c292; color: black;">@Html.DisplayFor(modelItem => report.TotalTalktime)</td>
-                                                    <td style="background-color: #ab8ce4; color: black;">@Html.DisplayFor(modelItem => report.OutboundExternalCalls)</td>
-                                                    <td style="background-color: #ab8ce4; color: black;">@Html.DisplayFor(modelItem => report.OutboundExtensionCalls)</td>
-                                                    <td style="background-color: #ab8ce4; color: black;">@Html.DisplayFor(modelItem => report.OutboundAvgTalktime)</td>
-                                                    <td style="background-color: #ab8ce4; color: black;">@Html.DisplayFor(modelItem => report.TotalOutboundTalktime)</td>
-
+                                                    <td>@Html.DisplayFor(modelItem => report.Extension)</td>
+                                                    <td>@Html.DisplayFor(modelItem => report.CallStartTime)</td>
+                                                    <td>@Html.DisplayFor(modelItem => report.CallEndTime)</td>
+                                                    <td>@Html.DisplayFor(modelItem => report.Duration)</td>
+                                                    <td>@Html.DisplayFor(modelItem => report.CalledNumber)</td>
+                                                    <td>@Html.DisplayFor(modelItem => report.CallRoutedCSQs)</td>
+                                                    @*<td>@Html.DisplayFor(modelItem => report.TalkTime)</td>*@
+                                                    <td>@Html.DisplayFor(modelItem => report.CallType)</td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -204,8 +116,7 @@
                     $.each(response, function (k, v) {
 
                         $('#tbody').append(`<tr>
-                                            <td>${v.AgentID}</td>
-                                            <td>${v.AgentName}</td>
+
                                             <td>${v.ExtensionNumber}</td>
                                             <td>${v.TotalCalls}</td>
                                             <td>${v.TotalInboundCalls}</td>
@@ -220,7 +131,7 @@
                                             <td>${v.OutboundExtensionCalls}</td>
                                             <td>${v.OutboundAvgTalktime}</td>
                                             <td>${v.TotalOutboundTalktime}</td>
-                                            
+
                                             </tr>`); /*<td>${v.Date}</td>*/
                     });
                 }
@@ -229,7 +140,7 @@
 
     })
 
-    
+
 
     $(function () {
         $("#ddlAgent").change(function () {

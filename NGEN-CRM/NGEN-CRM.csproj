@@ -253,6 +253,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AgentDetailReportController.cs" />
     <Compile Include="Controllers\Agent_QueueCreationController.cs" />
     <Compile Include="Controllers\CallRecordingController.cs" />
     <Compile Include="Controllers\ChatDashboard.cs" />
@@ -279,6 +280,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Agent.cs" />
+    <Compile Include="Models\AgentDetailReport.cs" />
     <Compile Include="Models\Agent_Queue.cs" />
     <Compile Include="Models\Agent_QueueRepository.cs" />
     <Compile Include="Models\CallRecordingDetails.cs" />
@@ -435,6 +437,7 @@
     <Content Include="Views\QueueOwner\Create.cshtml" />
     <Content Include="Views\Dummy\Dummy1.cshtml" />
     <Content Include="Views\IBOBExtensionACD\Index.cshtml" />
+    <Content Include="Views\AgentDetailReport\Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,6 +16,10 @@ namespace NGEN_CRM.Models
     {
         public int ID { get; set; }
 
+        public string AgentID { get; set; }
+
+        public string AgentName { get; set; }
+
         public string ExtensionNumber { get; set; }
 
         public string InboundACD_Calls { get; set; }

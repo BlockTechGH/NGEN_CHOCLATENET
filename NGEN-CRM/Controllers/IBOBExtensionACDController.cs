@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using Dapper;
 using Microsoft.Ajax.Utilities;
+using DocumentFormat.OpenXml.VariantTypes;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace NGEN_CRM.Controllers
 {
@@ -41,7 +43,7 @@ namespace NGEN_CRM.Controllers
                     //                    (select SUM(Cast(TotalCalls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) TotalCalls
                     //                    from (select Distinct ExtensionNumber Ext from ExtensionACD_IBOB_Log where Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}') E").ToList();// 
 
-                    var data = conn.Query<ExtensionACD_IBOB_LogList>($@"select Ext ExtensionNumber, 
+                    var data = conn.Query<ExtensionACD_IBOB_LogList>($@"select Ext ExtensionNumber, AgentName,
                                                                     (select SUM(Cast(InboundACD_Calls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) InboundACD_Calls, 
                                                                     (select SUM(Cast(InboundExtension_Calls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) InboundExtension_Calls, 
                                                                     (select SUM(Cast(TotalInboundCalls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) TotalInboundCalls, 
@@ -55,12 +57,15 @@ namespace NGEN_CRM.Controllers
                                                                     (select CONVERT(VARCHAR, DATEADD(SECOND, SUM(DATEDIFF(SECOND, '00:00:00', CONVERT(TIME, OutboundAvgTalktime))), '19000101'), 108) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) OutboundAvgTalktime, 
                                                                     (select CONVERT(VARCHAR, DATEADD(SECOND, SUM(DATEDIFF(SECOND, '00:00:00', CONVERT(TIME, TotalOutboundTalktime))), '19000101'), 108) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) TotalOutboundTalktime, 
                                                                     (select SUM(Cast(TotalCalls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}' ) TotalCalls 
-                                                                    from (select Distinct ExtensionNumber Ext from ExtensionACD_IBOB_Log where Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}') E").ToList();
-                    
+                                                                    from (select Distinct ExtensionNumber Ext, AgentName from ExtensionACD_IBOB_Log where Date='{Convert.ToDateTime(DateTime.Today).ToString("yyyy-MM-dd")}') E").ToList();
+
+
+
                     foreach (var log in data)
                     {
                         ExtensionACD_IBOB_LogList obj = new ExtensionACD_IBOB_LogList();
                         obj = log;
+                        obj.AgentID = log.ExtensionNumber;
                         if (log.ACDAvgTalktime == null)
                         {
                             obj.ACDAvgTalktime = "0";
@@ -109,7 +114,7 @@ namespace NGEN_CRM.Controllers
                 if (Session["Usmname"].ToString() == "Admin")
                 {
                     //model = conn.Query<ExtensionACD_IBOB_LogList>($"select * from ExtensionACD_IBOB_Log where Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' order by Date desc").ToList();
-                    model = conn.Query<ExtensionACD_IBOB_LogList>($@"select Ext ExtensionNumber,
+                    var data = conn.Query<ExtensionACD_IBOB_LogList>($@"select Ext ExtensionNumber,AgentName,
                                         (select SUM(Cast(InboundACD_Calls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) InboundACD_Calls,
                                         (select SUM(Cast(InboundExtension_Calls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) InboundExtension_Calls,
                                         (select SUM(Cast(TotalInboundCalls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) TotalInboundCalls,
@@ -123,7 +128,39 @@ namespace NGEN_CRM.Controllers
                                         (select CONVERT(VARCHAR, DATEADD(SECOND, SUM(DATEDIFF(SECOND, '00:00:00', CONVERT(TIME, OutboundAvgTalktime))), '19000101'), 108) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) OutboundAvgTalktime,
                                         (select CONVERT(VARCHAR, DATEADD(SECOND, SUM(DATEDIFF(SECOND, '00:00:00', CONVERT(TIME, TotalOutboundTalktime))), '19000101'), 108) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) TotalOutboundTalktime,
                                         (select SUM(Cast(TotalCalls as int)) from ExtensionACD_IBOB_Log where ExtensionNumber=Ext and Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) TotalCalls
-                                        from (select Distinct ExtensionNumber Ext from ExtensionACD_IBOB_Log where Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) E").ToList();
+                                        from (select Distinct ExtensionNumber Ext, AgentName from ExtensionACD_IBOB_Log where Date>='{Convert.ToDateTime(fromdate).ToString("yyyy-MM-dd")}' and Date<='{Convert.ToDateTime(todate).ToString("yyyy-MM-dd")}' ) E").ToList();
+
+                    foreach (var log in data)
+                    {
+                        ExtensionACD_IBOB_LogList obj = new ExtensionACD_IBOB_LogList();
+                        obj = log;
+                        obj.AgentID = log.ExtensionNumber;
+                        if (log.ACDAvgTalktime == null)
+                        {
+                            obj.ACDAvgTalktime = "0";
+                        }
+                        if (log.ExtensionAvgTalktime == null)
+                        {
+                            obj.ExtensionAvgTalktime = "0";
+                        }
+                        if (log.AvgTalktime == null)
+                        {
+                            obj.AvgTalktime = "0";
+                        }
+                        if (log.TotalTalktime == null)
+                        {
+                            obj.TotalTalktime = "0";
+                        }
+                        if (log.OutboundAvgTalktime == null)
+                        {
+                            obj.OutboundAvgTalktime = "0";
+                        }
+                        if (log.TotalOutboundTalktime == null)
+                        {
+                            obj.TotalOutboundTalktime = "0";
+                        }
+                        model.Add(obj);
+                    }
                 }
                 //else
                 //{
